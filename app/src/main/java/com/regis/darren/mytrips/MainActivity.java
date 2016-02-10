@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private Context context = null;
     private ListView listView = null;
     private List<String> list = new ArrayList<String>();
+    private List<Trip> trips = new ArrayList<Trip>();
     private ListAdapter adapter = null;
 
 
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initWithStrings();
+        initWithTrips();
     }
 
     private void initWithStrings() {
@@ -51,5 +52,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void initWithTrips() {
+        context = this;
+        listView = (ListView) findViewById(R.id.tripListView);
+        trips.add( new Trip("Pacific Islands", "7-10-2016", "7-24-2016") );
+        trips.add( new Trip("Scandanavia", "8-10-2017", "8-24-2017") );
+        adapter = new ArrayAdapter<Trip>(context, android.R.layout.simple_list_item_1, trips);
+        listView.setAdapter(adapter);
+
+
     }
 }

@@ -39,4 +39,9 @@ public class Trip {
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
+
+    @Override
+    public String toString() {
+        return name+"\n"+startDate+" to "+endDate;
+    }
 }
