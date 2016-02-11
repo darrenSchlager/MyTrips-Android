@@ -58,10 +58,20 @@ public class MainActivity extends AppCompatActivity {
         context = this;
         listView = (ListView) findViewById(R.id.tripListView);
         trips.add( new Trip("Pacific Islands", "7-10-2016", "7-24-2016") );
-        trips.add( new Trip("Scandanavia", "8-10-2017", "8-24-2017") );
+        trips.add( new Trip("Scandinavia", "8-10-2017", "8-24-2017") );
         adapter = new ArrayAdapter<Trip>(context, android.R.layout.simple_list_item_1, trips);
         listView.setAdapter(adapter);
 
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Trip t = (Trip) listView.getItemAtPosition(position);
+                Intent intent = new Intent(context, TripActivity.class);
+                intent.putExtra("trip name", t.getName());
+                intent.putExtra("start date", t.getStartDate());
+                intent.putExtra("end date", t.getEndDate());
+                startActivity(intent);
+            }
+        });
     }
 }
