@@ -1,11 +1,12 @@
 package com.regis.darren.mytrips.domain;
 
+import java.io.Serializable;
 import java.lang.ref.SoftReference;
 
 /**
  * Created by Darren on 2/8/16.
  */
-public class Trip {
+public class Trip implements Serializable { //Serializable allows objects of this class to be passed through intent.putExtra
     private String name;
     private String startDate;
     private String endDate;

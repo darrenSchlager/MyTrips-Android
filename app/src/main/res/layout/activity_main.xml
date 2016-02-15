@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="My Trips"
+        android:text="MyTrips"
         android:id="@+id/textView3"
         android:textSize="25dp"
         android:textStyle="bold"
@@ -31,17 +31,6 @@
         android:layout_toRightOf="@+id/textView5"
         android:layout_toEndOf="@+id/textView5"
         android:layout_marginTop="15dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="__________________________________________________"
-        android:id="@+id/textView4"
-        android:textColor="#000000"
-        android:paddingBottom="10dp"
-        android:layout_below="@+id/imageView2"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -58,5 +47,16 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/textView5"
         android:layout_toStartOf="@+id/textView5"
-        android:layout_marginRight="20dp" />
+        android:layout_marginRight="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴"
+        android:id="@+id/textView4"
+        android:textColor="#FF4C4C4C"
+        android:paddingBottom="5dp"
+        android:layout_below="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp" />
 </RelativeLayout>

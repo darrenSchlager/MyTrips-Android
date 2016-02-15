@@ -35,7 +35,7 @@
         android:id="@+id/endDate"
         android:text="MM-DD-YYYY"
         android:textSize="17dp"
-        android:layout_above="@+id/textView2"
+        android:layout_above="@+id/textView6"
         android:layout_toRightOf="@+id/textView"
         android:layout_toEndOf="@+id/textView" />
 
@@ -52,12 +52,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="__________________________________________________"
-        android:id="@+id/textView2"
-        android:textColor="#000000"
-        android:paddingBottom="10dp"
-        android:layout_below="@+id/startDate"
+        android:text="∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴"
+        android:id="@+id/textView6"
+        android:textColor="#FF4C4C4C"
+        android:paddingBottom="5dp"
         android:layout_centerHorizontal="true"
-        android:textStyle="bold" />
+        android:layout_below="@+id/startDate"
+        android:layout_marginTop="5dp" />
 
 </RelativeLayout>

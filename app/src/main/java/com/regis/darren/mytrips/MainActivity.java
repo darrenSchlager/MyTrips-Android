@@ -32,28 +32,6 @@ public class MainActivity extends AppCompatActivity {
         initWithTrips();
     }
 
-    private void initWithStrings() {
-        context = this;
-        listView = (ListView) findViewById(R.id.tripListView);
-        list.add("Pacific Islands");
-        list.add("Scandinavia");
-        list.add("Alaska");
-        list.add("Europe");
-        list.add("Australia");
-        adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, list);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = (String) listView.getItemAtPosition(position);
-                Intent intent = new Intent(context, TripActivity.class);
-                intent.putExtra("trip name", item);
-                startActivity(intent);
-            }
-        });
-    }
-
     private void initWithTrips() {
         context = this;
         listView = (ListView) findViewById(R.id.tripListView);
@@ -65,11 +43,9 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Trip t = (Trip) listView.getItemAtPosition(position);
+                Trip trip = (Trip) listView.getItemAtPosition(position);
                 Intent intent = new Intent(context, TripActivity.class);
-                intent.putExtra("trip name", t.getName());
-                intent.putExtra("start date", t.getStartDate());
-                intent.putExtra("end date", t.getEndDate());
+                intent.putExtra("trip", trip);
                 startActivity(intent);
             }
         });

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.regis.darren.mytrips.domain.Trip;
+
 public class TripActivity extends AppCompatActivity {
 
     @Override
@@ -17,14 +19,10 @@ public class TripActivity extends AppCompatActivity {
         EditText tripNameField = (EditText) findViewById(R.id.tripName);
         EditText startDateField = (EditText) findViewById(R.id.startDate);
         EditText endDateField = (EditText) findViewById(R.id.endDate);
-        String tn = intent.getStringExtra("trip name");
-        String sd = intent.getStringExtra("start date");
-        String ed = intent.getStringExtra("end date");
 
-        tripNameField.setText(tn);
-        startDateField.setText(sd);
-        endDateField.setText(ed);
-
-
+        Trip trip = (Trip)intent.getSerializableExtra("trip");
+        tripNameField.setText(trip.getName());
+        startDateField.setText(trip.getStartDate());
+        endDateField.setText(trip.getEndDate());
     }
 }
