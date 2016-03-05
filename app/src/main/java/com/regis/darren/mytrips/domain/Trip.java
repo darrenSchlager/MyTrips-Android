@@ -2,6 +2,8 @@ package com.regis.darren.mytrips.domain;
 
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Darren on 2/8/16.
@@ -10,6 +12,7 @@ public class Trip implements Serializable { //Serializable allows objects of thi
     private String name;
     private String startDate;
     private String endDate;
+    private List<Location> locations = new ArrayList();
 
     public Trip(String name, String startDate, String endDate) {
         this.name = name;
@@ -17,13 +20,9 @@ public class Trip implements Serializable { //Serializable allows objects of thi
         this.endDate = endDate;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
     public String getStartDate() {
         return startDate;
@@ -41,8 +40,14 @@ public class Trip implements Serializable { //Serializable allows objects of thi
         this.endDate = endDate;
     }
 
+    public List<Location> getLocations() { return locations; }
+
+    public void setLocations(List<Location> locations) { this.locations = locations; }
+
     @Override
     public String toString() {
         return name+"\n"+startDate+" to "+endDate;
     }
+
+
 }

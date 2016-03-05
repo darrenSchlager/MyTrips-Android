@@ -2,15 +2,21 @@ package com.regis.darren.mytrips;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
+import com.regis.darren.mytrips.domain.Location;
 import com.regis.darren.mytrips.domain.Trip;
 
 import java.util.Calendar;
@@ -18,6 +24,10 @@ import java.util.Calendar;
 public class TripActivity extends AppCompatActivity {
 
     static Trip trip;
+    private Context context = null;
+    private ListView listView = null;
+    private ListAdapter adapter = null;
+
     static boolean settingStartDate;
     static Button startDateField;
     static Button endDateField;
@@ -36,6 +46,26 @@ public class TripActivity extends AppCompatActivity {
         tripNameField.setText(trip.getName());
         startDateField.setText(trip.getStartDate());
         endDateField.setText(trip.getEndDate());
+
+        initWithLocations();
+    }
+
+    private void initWithLocations() {
+        context = this;
+        listView = (ListView) findViewById(R.id.locationListView);
+
+        adapter = new ArrayAdapter<Location>(context, android.R.layout.simple_list_item_1, trip.getLocations());
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Location location = (Location) listView.getItemAtPosition(position);
+                //Intent intent = new Intent(context, LocationActivity.class);
+                //intent.putExtra("location", location);
+                //startActivity(intent);
+            }
+        });
     }
 
     public void selectStartDate(View view) {

@@ -67,4 +67,11 @@
         android:layout_toRightOf="@+id/textView"
         android:layout_toEndOf="@+id/textView" />
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/locationListView"
+        android:layout_below="@+id/textView6"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
