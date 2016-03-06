@@ -29,8 +29,8 @@ public class TripActivity extends AppCompatActivity {
     private ListAdapter adapter = null;
 
     static boolean settingStartDate;
-    static Button startDateField;
-    static Button endDateField;
+    static Button startDateButton;
+    static Button endDateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +39,13 @@ public class TripActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         EditText tripNameField = (EditText) findViewById(R.id.tripName);
-        startDateField = (Button) findViewById(R.id.startDate);
-        endDateField = (Button) findViewById(R.id.endDate);
+        startDateButton = (Button) findViewById(R.id.startDate);
+        endDateButton = (Button) findViewById(R.id.endDate);
 
         trip = (Trip) intent.getSerializableExtra("trip");
         tripNameField.setText(trip.getName());
-        startDateField.setText(trip.getStartDate());
-        endDateField.setText(trip.getEndDate());
+        startDateButton.setText(trip.getStartDate());
+        endDateButton.setText(trip.getEndDate());
 
         initWithLocations();
     }
@@ -60,10 +60,10 @@ public class TripActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Location location = (Location) listView.getItemAtPosition(position);
-                //Intent intent = new Intent(context, LocationActivity.class);
-                //intent.putExtra("location", location);
-                //startActivity(intent);
+                Intent intent = new Intent(context, LocationActivity.class);
+                intent.putExtra("trip", trip);
+                intent.putExtra("locationIndex", position);
+                startActivity(intent);
             }
         });
     }
@@ -126,11 +126,11 @@ public class TripActivity extends AppCompatActivity {
             String date = (month+1)+"-"+day+"-"+year;
             if(settingStartDate) {
                 trip.setStartDate(date);
-                startDateField.setText(trip.getStartDate());
+                startDateButton.setText(trip.getStartDate());
             }
             else {
                 trip.setEndDate(date);
-                endDateField.setText(trip.getEndDate());
+                endDateButton.setText(trip.getEndDate());
             }
 
         }
