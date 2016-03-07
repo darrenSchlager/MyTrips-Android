@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyTrips</string>
+    <string name="action_itinerary">View Itinerary</string>
 </resources>
