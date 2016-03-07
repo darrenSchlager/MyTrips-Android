@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.regis.darren.mytrips.ActivityItemActivity"
+    android:focusableInTouchMode="true">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/activityName"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Activity Name"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="   at   "
+        android:id="@+id/textView8"
+        android:layout_below="@+id/activityName"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:textColor="#181818"
+        android:layout_marginTop="15dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="selectDate"
+        android:text="DATE"
+        android:id="@+id/date"
+        android:layout_below="@+id/activityName"
+        android:layout_toLeftOf="@+id/textView8"
+        android:layout_toStartOf="@+id/textView8"
+        android:textSize="17dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="selectTime"
+        android:text="TIME"
+        android:id="@+id/time"
+        android:layout_below="@+id/activityName"
+        android:layout_toRightOf="@+id/textView8"
+        android:layout_toEndOf="@+id/textView8"
+        android:textSize="17dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴"
+        android:id="@+id/textView9"
+        android:textColor="#FF4C4C4C"
+        android:paddingBottom="5dp"
+        android:layout_below="@+id/date"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:id="@+id/textView10"
+        android:layout_below="@+id/textView9"
+        android:layout_alignLeft="@+id/textView9"
+        android:layout_alignStart="@+id/textView9"
+        android:textStyle="bold"
+        android:textColor="#181818"
+        android:textSize="25dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/description"
+        android:layout_below="@+id/textView10"
+        android:layout_alignLeft="@+id/textView10"
+        android:layout_alignStart="@+id/textView10"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/textView9"
+        android:layout_alignEnd="@+id/textView9"
+        android:gravity="top" />
+</RelativeLayout>

@@ -79,16 +79,18 @@ public class LocationActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ActivityItem activityItem = (ActivityItem) listView.getItemAtPosition(position);
-                //Intent intent = new Intent(context, ActivityItemActivity.class);
-                //intent.putExtra("activity", activityItem);
-                //startActivity(intent);
+                Intent intent = new Intent(context, ActivityItemActivity.class);
+                intent.putExtra("location", location);
+                intent.putExtra("activityItemIndex", position);
+                startActivity(intent);
             }
         });
     }
 
     public void addActivity(View view) {
-        //todo
+        Intent intent = new Intent(context, ActivityItemActivity.class);
+        intent.putExtra("location", location);
+        startActivity(intent);
     }
 
     public void selectArrive(View view) {
@@ -164,10 +166,10 @@ public class LocationActivity extends AppCompatActivity {
             String date = (month + 1) + "-" + day + "-" + year;
             if (settingArrive) {
                 location.setArrive(date);
-                arriveButton.setText(location.getArrive());
+                arriveButton.setText(date);
             } else {
                 location.setDepart(date);
-                departButton.setText(location.getDepart());
+                departButton.setText(date);
             }
 
         }

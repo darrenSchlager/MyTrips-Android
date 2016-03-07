@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
         Trip t2 = new Trip("Alaska", "8-5-2017", "8-19-2017");
         List<Location> t2Locations = new ArrayList();
         //
-        Location l3 = new Location("Juneau", "Alaska", "8-5-2016", "8-19-2016");
+        Location l3 = new Location("Juneau", "Alaska", "8-5-2017", "8-19-2017");
         List<ActivityItem> l3ActivityItems = new ArrayList();
-        l3ActivityItems.add(new ActivityItem("Coast Tour", "8-7-2016", "10:30 AM", "Alaska coast boat tour"));
+        l3ActivityItems.add(new ActivityItem("Coast Tour", "8-7-2017", "10:30 AM", "Alaska coast boat tour"));
         l3.setActivityItems(l3ActivityItems);
         t2Locations.add(l3);
         //

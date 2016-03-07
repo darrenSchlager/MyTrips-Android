@@ -144,11 +144,11 @@ public class TripActivity extends AppCompatActivity {
             String date = (month+1)+"-"+day+"-"+year;
             if(settingStartDate) {
                 trip.setStartDate(date);
-                startDateButton.setText(trip.getStartDate());
+                startDateButton.setText(date);
             }
             else {
                 trip.setEndDate(date);
-                endDateButton.setText(trip.getEndDate());
+                endDateButton.setText(date);
             }
 
         }
