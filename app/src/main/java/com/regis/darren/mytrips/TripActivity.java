@@ -28,6 +28,8 @@ public class TripActivity extends AppCompatActivity {
     private ListView listView = null;
     private ListAdapter adapter = null;
 
+    EditText tripNameField;
+
     static boolean settingStartDate;
     static Button startDateButton;
     static Button endDateButton;
@@ -43,11 +45,17 @@ public class TripActivity extends AppCompatActivity {
         endDateButton = (Button) findViewById(R.id.endDate);
 
         trip = (Trip) intent.getSerializableExtra("trip");
-        tripNameField.setText(trip.getName());
-        startDateButton.setText(trip.getStartDate());
-        endDateButton.setText(trip.getEndDate());
+        if(trip != null) {
+            tripNameField.setText(trip.getName());
+            startDateButton.setText(trip.getStartDate());
+            endDateButton.setText(trip.getEndDate());
 
-        initWithLocations();
+            initWithLocations();
+        }
+        else {
+            trip = new Trip();
+        }
+
     }
 
     private void initWithLocations() {
@@ -66,6 +74,16 @@ public class TripActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public void addLocation(View view) {
+
+        if(trip.getName() != "") {
+            Intent intent = new Intent(context, LocationActivity.class);
+            intent.putExtra("trip", trip);
+            startActivity(intent);
+        }
+
     }
 
     public void selectStartDate(View view) {

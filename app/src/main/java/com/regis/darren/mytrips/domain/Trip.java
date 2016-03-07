@@ -14,6 +14,12 @@ public class Trip implements Serializable { //Serializable allows objects of thi
     private String endDate;
     private List<Location> locations = new ArrayList();
 
+    public Trip() {
+        name = "";
+        startDate = "";
+        endDate = "";
+    }
+
     public Trip(String name, String startDate, String endDate) {
         this.name = name;
         this.startDate = startDate;

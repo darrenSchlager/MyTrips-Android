@@ -51,13 +51,21 @@ public class LocationActivity extends AppCompatActivity {
         tripStartDate = trip.getStartDate();
         tripEndDate = trip.getEndDate();
         int locationIndex = intent.getIntExtra("locationIndex", -1);
-        location = trip.getLocations().get(locationIndex);
-        cityField.setText(location.getCity());
-        stateCountryField.setText(location.getStateCountry());
-        arriveButton.setText(location.getArrive());
-        departButton.setText(location.getDepart());
 
-        initWithActivityItems();
+        if(locationIndex != -1) {
+            location = trip.getLocations().get(locationIndex);
+            cityField.setText(location.getCity());
+            stateCountryField.setText(location.getStateCountry());
+            arriveButton.setText(location.getArrive());
+            departButton.setText(location.getDepart());
+
+            initWithActivityItems();
+        }
+        else
+        {
+            location = new Location();
+        }
+
 
     }
 
@@ -72,11 +80,15 @@ public class LocationActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ActivityItem activityItem = (ActivityItem) listView.getItemAtPosition(position);
-                //Intent intent = new Intent(context, ActivityActivity.class);
+                //Intent intent = new Intent(context, ActivityItemActivity.class);
                 //intent.putExtra("activity", activityItem);
                 //startActivity(intent);
             }
         });
+    }
+
+    public void addActivity(View view) {
+        //todo
     }
 
     public void selectArrive(View view) {
@@ -122,9 +134,9 @@ public class LocationActivity extends AppCompatActivity {
                 day = Integer.parseInt(match[1]);
                 year = Integer.parseInt(match[2]);
             } else {
-                month = c.get(Calendar.MONTH);
-                day = c.get(Calendar.DAY_OF_MONTH);
-                year = c.get(Calendar.YEAR);
+                month = Integer.parseInt(matchTripStartDate[0]) - 1;
+                day = Integer.parseInt(matchTripStartDate[1]);
+                year = Integer.parseInt(matchTripStartDate[2]);
             }
 
             DatePickerDialog datePicker = new DatePickerDialog(getActivity(), android.R.style.Theme_Material_Dialog, this, year, month, day);
@@ -139,6 +151,10 @@ public class LocationActivity extends AppCompatActivity {
                     datePicker.getDatePicker().setMinDate(cTimeInMillis);
                     datePicker.getDatePicker().setMaxDate(cTripEndDateTimeInMillis);
                 }
+            }
+            else {
+                datePicker.getDatePicker().setMinDate(cTripStartDateTimeInMillis);
+                datePicker.getDatePicker().setMaxDate(cTripEndDateTimeInMillis);
             }
             return datePicker;
         }

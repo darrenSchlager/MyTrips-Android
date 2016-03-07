@@ -83,4 +83,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void newTrip(View view) {
+        Intent intent = new Intent(context, TripActivity.class);
+        startActivity(intent);
+    }
 }

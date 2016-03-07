@@ -15,6 +15,13 @@ public class Location implements Serializable {
     private String depart;
     private List<ActivityItem> activityItems = new ArrayList();
 
+    public Location() {
+        city = "";
+        stateCountry = "";
+        arrive = "";
+        depart = "";
+    }
+
     public Location(String city, String stateCountry, String arrive, String depart) {
         this.city = city;
         this.stateCountry = stateCountry;

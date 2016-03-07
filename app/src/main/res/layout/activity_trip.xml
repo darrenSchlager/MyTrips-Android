@@ -72,6 +72,16 @@
         android:layout_height="match_parent"
         android:id="@+id/locationListView"
         android:layout_below="@+id/textView6"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/addLocation" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Location"
+        android:id="@+id/addLocation"
+        android:onClick="addLocation"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

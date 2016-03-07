@@ -12,6 +12,13 @@ public class ActivityItem implements Serializable {
     private String time;
     private String description;
 
+    public ActivityItem() {
+        activityName = "";
+        date = "";
+        time = "";
+        description = "";
+    }
+
     public ActivityItem(String activityName, String date, String time, String description) {
         this.activityName = activityName;
         this.date = date;
