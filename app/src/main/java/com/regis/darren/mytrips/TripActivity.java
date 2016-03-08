@@ -70,8 +70,10 @@ public class TripActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id==R.id.action_itinerary) {
-            Toast.makeText(this, "Itinerary", Toast.LENGTH_SHORT).show();
+        if(id==R.id.action_itinerary && trip.isComplete()) {
+            Intent intent = new Intent(this, ItineraryActivity.class);
+            intent.putExtra("trip", trip);
+            startActivity(intent);
             return true;
         }
 
@@ -98,8 +100,8 @@ public class TripActivity extends AppCompatActivity {
 
     public void addLocation(View view) {
 
-        if(trip.getName() != "") {
-            Intent intent = new Intent(context, LocationActivity.class);
+        if(trip.isComplete()) {
+            Intent intent = new Intent(this, LocationActivity.class);
             intent.putExtra("trip", trip);
             startActivity(intent);
         }

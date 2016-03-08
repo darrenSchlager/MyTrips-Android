@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         Location l1 = new Location("Wailea", "Hawaii", "7-10-2016", "7-17-2016");
         List<ActivityItem> l1ActivityItems = new ArrayList();
         l1ActivityItems.add(new ActivityItem("Volcano Hike", "7-11-2016", "10:30 AM", "Hike the Haleakala crater"));
+        l1ActivityItems.add(new ActivityItem("Jeep tour", "7-16-2016", "1:00 PM", "Jeep tour on Lanai"));
         l1.setActivityItems(l1ActivityItems);
         t1Locations.add(l1);
         //
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newTrip(View view) {
-        Intent intent = new Intent(context, TripActivity.class);
+        Intent intent = new Intent(this, TripActivity.class);
         startActivity(intent);
     }
 }

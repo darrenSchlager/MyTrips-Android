@@ -29,6 +29,10 @@ public class Location implements Serializable {
         this.depart = depart;
     }
 
+    public boolean isComplete() {
+        return city.compareTo("")!=0 && stateCountry.compareTo("")!=0 && arrive.compareTo("")!=0 && depart.compareTo("")!=0;
+    }
+
     public String getCity() {
         return city;
     }

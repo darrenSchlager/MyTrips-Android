@@ -26,6 +26,10 @@ public class ActivityItem implements Serializable {
         this.description = description;
     }
 
+    public boolean isComplete() {
+        return activityName.compareTo("")!=0 && date.compareTo("")!=0 && time.compareTo("")!=0;
+    }
+
     public String getActivityName() {
         return activityName;
     }

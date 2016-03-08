@@ -28,6 +28,7 @@ import java.util.Calendar;
 
 public class LocationActivity extends AppCompatActivity {
 
+    static Trip trip;
     static Location location;
     static String tripStartDate;
     static String tripEndDate;
@@ -50,7 +51,7 @@ public class LocationActivity extends AppCompatActivity {
         arriveButton = (Button) findViewById(R.id.arrive);
         departButton = (Button) findViewById(R.id.depart);
 
-        Trip trip = (Trip) intent.getSerializableExtra("trip");
+        trip = (Trip) intent.getSerializableExtra("trip");
         tripStartDate = trip.getStartDate();
         tripEndDate = trip.getEndDate();
         int locationIndex = intent.getIntExtra("locationIndex", -1);
@@ -81,7 +82,9 @@ public class LocationActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id==R.id.action_itinerary) {
-            Toast.makeText(this, "Itinerary", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, ItineraryActivity.class);
+            intent.putExtra("trip", trip);
+            startActivity(intent);
             return true;
         }
 
@@ -99,6 +102,7 @@ public class LocationActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(context, ActivityItemActivity.class);
+                intent.putExtra("trip", trip);
                 intent.putExtra("location", location);
                 intent.putExtra("activityItemIndex", position);
                 startActivity(intent);
@@ -107,9 +111,12 @@ public class LocationActivity extends AppCompatActivity {
     }
 
     public void addActivity(View view) {
-        Intent intent = new Intent(context, ActivityItemActivity.class);
-        intent.putExtra("location", location);
-        startActivity(intent);
+        if(location.isComplete()) {
+            Intent intent = new Intent(this, ActivityItemActivity.class);
+            intent.putExtra("trip", trip);
+            intent.putExtra("location", location);
+            startActivity(intent);
+        }
     }
 
     public void selectArrive(View view) {
