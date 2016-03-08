@@ -29,6 +29,7 @@ import java.util.Calendar;
 public class LocationActivity extends AppCompatActivity {
 
     static Trip trip;
+    int locationIndex;
     static Location location;
     static String tripStartDate;
     static String tripEndDate;
@@ -54,7 +55,7 @@ public class LocationActivity extends AppCompatActivity {
         trip = (Trip) intent.getSerializableExtra("trip");
         tripStartDate = trip.getStartDate();
         tripEndDate = trip.getEndDate();
-        int locationIndex = intent.getIntExtra("locationIndex", -1);
+        locationIndex = intent.getIntExtra("locationIndex", -1);
 
         if(locationIndex != -1) {
             location = trip.getLocations().get(locationIndex);
@@ -103,7 +104,7 @@ public class LocationActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(context, ActivityItemActivity.class);
                 intent.putExtra("trip", trip);
-                intent.putExtra("location", location);
+                intent.putExtra("locationIndex", locationIndex);
                 intent.putExtra("activityItemIndex", position);
                 startActivity(intent);
             }
@@ -114,7 +115,7 @@ public class LocationActivity extends AppCompatActivity {
         if(location.isComplete()) {
             Intent intent = new Intent(this, ActivityItemActivity.class);
             intent.putExtra("trip", trip);
-            intent.putExtra("location", location);
+            intent.putExtra("locationIndex", locationIndex);
             startActivity(intent);
         }
     }

@@ -28,6 +28,7 @@ import java.util.Calendar;
 
 public class ActivityItemActivity extends AppCompatActivity {
 
+    static Trip trip;
     static ActivityItem activityItem;
     static String locationArrive;
     static String locationDepart;
@@ -46,7 +47,9 @@ public class ActivityItemActivity extends AppCompatActivity {
         timeButton = (Button) findViewById(R.id.time);
         EditText descriptionField = (EditText) findViewById(R.id.description);
 
-        Location location = (Location) intent.getSerializableExtra("location");
+        trip = (Trip) getIntent().getSerializableExtra("trip");
+        int locationIndex = intent.getIntExtra("locationIndex", -1);
+        Location location = trip.getLocations().get(locationIndex);
         locationArrive = location.getArrive();
         locationDepart = location.getDepart();
         int activityItemIndex = intent.getIntExtra("activityItemIndex", -1);
@@ -73,7 +76,6 @@ public class ActivityItemActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Trip trip = (Trip) getIntent().getSerializableExtra("trip");
         if(id==R.id.action_itinerary) {
             Intent intent = new Intent(this, ItineraryActivity.class);
             intent.putExtra("trip", trip);
