@@ -29,7 +29,9 @@
         <activity
             android:name=".ActivityItemActivity"
             android:label="@string/activityitem_activity_name" />
-        <activity android:name=".ItineraryActivity"></activity>
+        <activity
+            android:name=".ItineraryActivity"
+            android:label="@string/itinerary_activity_name"></activity>
     </application>
 
 </manifest>
