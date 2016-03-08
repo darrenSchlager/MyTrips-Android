@@ -13,5 +13,5 @@
         android:layout_marginLeft="50dp"
         android:background="#424242"
         android:textColor="#fafafa"
-        android:layout_marginRight="25dp" />
+        android:layout_marginRight="20dp" />
 </LinearLayout>

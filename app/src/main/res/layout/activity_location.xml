@@ -30,7 +30,7 @@
             android:text=", "
             android:id="@+id/textView11"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/city"
+
             android:layout_toEndOf="@+id/city"
             android:textSize="25dp"
             android:textStyle="bold"
