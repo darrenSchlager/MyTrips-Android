@@ -9,7 +9,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" />
-        <activity android:name=".TripActivity" />
+        <activity
+            android:name=".TripActivity"
+            android:label="@string/trip_activity_name"/>
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,8 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LocationActivity" />
-        <activity android:name=".ActivityItemActivity" />
+        <activity
+            android:name=".LocationActivity"
+            android:label="@string/location_activity_name" />
+        <activity
+            android:name=".ActivityItemActivity"
+            android:label="@string/activityitem_activity_name" />
         <activity android:name=".ItineraryActivity"></activity>
     </application>
 

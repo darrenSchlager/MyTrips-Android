@@ -7,6 +7,6 @@
     <item android:id="@+id/action_itinerary"
           android:title="@string/action_itinerary"
           android:orderInCategory="100"
-          app:showAsAction="never" />
+          app:showAsAction="always" />
 
 </menu>

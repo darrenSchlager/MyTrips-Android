@@ -100,18 +100,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/activitiesListView"
-            android:layout_below="@+id/textView2"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@+id/addActivity" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/addActivity" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Activity"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:text="+"
             android:id="@+id/addActivity"
             android:onClick="addActivity"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            android:textSize="20dp"
+            android:layout_below="@+id/textView2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activities"
+            android:id="@+id/textView12"
+            android:textStyle="bold"
+            android:textColor="#181818"
+            android:textSize="17dp"
+            android:layout_alignTop="@+id/addActivity"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="12dp" />
 
     </RelativeLayout>
 

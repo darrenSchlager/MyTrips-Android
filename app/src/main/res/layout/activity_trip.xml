@@ -72,17 +72,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/locationListView"
-        android:layout_below="@+id/textView6"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/addLocation" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/addLocation" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Location"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:text="+"
         android:id="@+id/addLocation"
         android:onClick="addLocation"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/textView6"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Locations"
+        android:id="@+id/textView14"
+        android:textStyle="bold"
+        android:textColor="#181818"
+        android:textSize="17dp"
+        android:layout_alignTop="@+id/addLocation"
+        android:layout_toRightOf="@+id/viewSwitcher"
+        android:layout_toEndOf="@+id/viewSwitcher"
+        android:layout_marginTop="12dp" />
 
 </RelativeLayout>

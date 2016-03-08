@@ -73,7 +73,7 @@
         android:layout_alignStart="@+id/textView9"
         android:textStyle="bold"
         android:textColor="#181818"
-        android:textSize="25dp" />
+        android:textSize="17dp" />
 
     <EditText
         android:layout_width="wrap_content"
