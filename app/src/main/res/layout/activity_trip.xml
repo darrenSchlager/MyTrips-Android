@@ -18,7 +18,8 @@
         android:layout_centerHorizontal="true"
         android:text="Trip Name"
         android:textStyle="bold"
-        android:textSize="25dp" />
+        android:textSize="25dp"
+        android:layout_marginTop="-10dp" />
 
     <ViewSwitcher
         android:layout_width="wrap_content"

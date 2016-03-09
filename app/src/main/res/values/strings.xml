@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">My Trips</string>
+    <string name="app_name">MyTrips</string>
     <string name="trip_activity_name">Trip</string>
     <string name="location_activity_name">Location</string>
     <string name="activityitem_activity_name">Activity</string>
     <string name="itinerary_activity_name">Itinerary</string>
+    <string name="login_activity_name">Login</string>
     <string name="action_itinerary">View Itinerary</string>
 </resources>

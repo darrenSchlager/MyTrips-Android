@@ -10,10 +10,10 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".TripActivity"
-            android:label="@string/trip_activity_name"/>
+            android:label="@string/trip_activity_name" />
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
@@ -31,7 +31,11 @@
             android:label="@string/activityitem_activity_name" />
         <activity
             android:name=".ItineraryActivity"
-            android:label="@string/itinerary_activity_name"></activity>
+            android:label="@string/itinerary_activity_name" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/login_activity_name"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>
