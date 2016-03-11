@@ -48,18 +48,6 @@ public class TripSvcSIOImpl implements ITripSvc {
         return list;
     }
 
-    @Override
-    public Trip update(Trip trip) throws Exception {
-
-        return trip;
-    }
-
-    @Override
-    public Trip delete(Trip trip) throws Exception {
-
-        return trip;
-    }
-
     private void readFile() throws Exception {
         try {
             FileInputStream fis = context.openFileInput(FILE_NAME);

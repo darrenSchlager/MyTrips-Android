@@ -15,10 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.regis.darren.mytrips.domain.ActivityItem;
 import com.regis.darren.mytrips.domain.Location;
@@ -35,6 +32,8 @@ public class ActivityItemActivity extends AppCompatActivity {
     private Context context = null;
     static Button dateButton;
     static Button timeButton;
+    private Button dynamicButton1;
+    private Button dynamicButton2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +45,8 @@ public class ActivityItemActivity extends AppCompatActivity {
         dateButton = (Button) findViewById(R.id.date);
         timeButton = (Button) findViewById(R.id.time);
         EditText descriptionField = (EditText) findViewById(R.id.description);
+        dynamicButton1 = (Button) findViewById(R.id.activityItemDynamicButton1);
+        dynamicButton2 = (Button) findViewById(R.id.activityItemDynamicButton2);
 
         trip = (Trip) getIntent().getSerializableExtra("trip");
         int locationIndex = intent.getIntExtra("locationIndex", -1);
@@ -60,10 +61,14 @@ public class ActivityItemActivity extends AppCompatActivity {
             dateButton.setText(activityItem.getDate());
             timeButton.setText(activityItem.getTime());
             descriptionField.setText(activityItem.getDescription());
+            dynamicButton1.setText("Update");
+            dynamicButton2.setText("Delete");
         }
         else
         {
             activityItem = new ActivityItem();
+            dynamicButton1.setText("Save");
+            dynamicButton2.setText("Cancel");
         }
     }
 

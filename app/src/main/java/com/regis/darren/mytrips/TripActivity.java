@@ -36,6 +36,8 @@ public class TripActivity extends AppCompatActivity {
     static boolean settingStartDate;
     static Button startDateButton;
     static Button endDateButton;
+    private Button dynamicButton1;
+    private Button dynamicButton2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +48,23 @@ public class TripActivity extends AppCompatActivity {
         EditText tripNameField = (EditText) findViewById(R.id.tripName);
         startDateButton = (Button) findViewById(R.id.startDate);
         endDateButton = (Button) findViewById(R.id.endDate);
+        dynamicButton1 = (Button) findViewById(R.id.tripDynamicButton1);
+        dynamicButton2 = (Button) findViewById(R.id.tripDynamicButton2);
 
         trip = (Trip) intent.getSerializableExtra("trip");
         if(trip != null) {
             tripNameField.setText(trip.getName());
             startDateButton.setText(trip.getStartDate());
             endDateButton.setText(trip.getEndDate());
+            dynamicButton1.setText("Update");
+            dynamicButton2.setText("Delete");
 
             initWithLocations();
         }
         else {
             trip = new Trip();
+            dynamicButton1.setText("Save");
+            dynamicButton2.setText("Cancel");
         }
 
     }

@@ -41,6 +41,9 @@ public class LocationActivity extends AppCompatActivity {
     static Button arriveButton;
     static Button departButton;
 
+    private Button dynamicButton1;
+    private Button dynamicButton2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +54,8 @@ public class LocationActivity extends AppCompatActivity {
         EditText stateCountryField = (EditText) findViewById(R.id.stateCountry);
         arriveButton = (Button) findViewById(R.id.arrive);
         departButton = (Button) findViewById(R.id.depart);
+        dynamicButton1 = (Button) findViewById(R.id.locationDynamicButton1);
+        dynamicButton2 = (Button) findViewById(R.id.locationDynamicButton2);
 
         trip = (Trip) intent.getSerializableExtra("trip");
         tripStartDate = trip.getStartDate();
@@ -63,12 +68,16 @@ public class LocationActivity extends AppCompatActivity {
             stateCountryField.setText(location.getStateCountry());
             arriveButton.setText(location.getArrive());
             departButton.setText(location.getDepart());
+            dynamicButton1.setText("Update");
+            dynamicButton2.setText("Delete");
 
             initWithActivityItems();
         }
         else
         {
             location = new Location();
+            dynamicButton1.setText("Save");
+            dynamicButton2.setText("Cancel");
         }
 
     }

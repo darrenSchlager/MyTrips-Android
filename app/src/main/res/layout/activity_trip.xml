@@ -73,10 +73,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/locationListView"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/addLocation" />
+        android:layout_below="@+id/addLocation"
+        android:layout_above="@+id/tripDynamicButton1" />
 
     <Button
         android:layout_width="45dp"
@@ -102,5 +102,23 @@
         android:layout_toRightOf="@+id/viewSwitcher"
         android:layout_toEndOf="@+id/viewSwitcher"
         android:layout_marginTop="12dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dynamic1"
+        android:id="@+id/tripDynamicButton1"
+        android:layout_alignTop="@+id/tripDynamicButton2"
+        android:layout_alignRight="@+id/startDate"
+        android:layout_alignEnd="@+id/startDate" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dynamic2"
+        android:id="@+id/tripDynamicButton2"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/endDate"
+        android:layout_alignStart="@+id/endDate" />
 
 </RelativeLayout>
