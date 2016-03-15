@@ -3,7 +3,6 @@ package com.regis.darren.mytrips;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -16,44 +15,65 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.regis.darren.mytrips.domain.ActivityItem;
 import com.regis.darren.mytrips.domain.Location;
 import com.regis.darren.mytrips.domain.Trip;
+import com.regis.darren.mytrips.service.ITripSvc;
+import com.regis.darren.mytrips.service.TripSvcSIOImpl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class ActivityItemActivity extends AppCompatActivity {
 
+    private int tripIndex;
+    private int locationIndex;
+    private int activityItemIndex;
+    private List<Trip> trips = new ArrayList<Trip>();
     static Trip trip;
+    private Location location;
     static ActivityItem activityItem;
     static String locationArrive;
     static String locationDepart;
-    private Context context = null;
     static Button dateButton;
     static Button timeButton;
+    private EditText activityItemNameField;
     private Button dynamicButton1;
     private Button dynamicButton2;
+    private EditText descriptionField;
+
+    private Boolean addingNew = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_item);
 
+        try {
+            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+            trips = tripSvc.retrieveAll();
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
         Intent intent = getIntent();
-        EditText activityItemNameField = (EditText) findViewById(R.id.activityName);
+        activityItemNameField = (EditText) findViewById(R.id.activityName);
         dateButton = (Button) findViewById(R.id.date);
         timeButton = (Button) findViewById(R.id.time);
-        EditText descriptionField = (EditText) findViewById(R.id.description);
+        descriptionField = (EditText) findViewById(R.id.description);
         dynamicButton1 = (Button) findViewById(R.id.activityItemDynamicButton1);
         dynamicButton2 = (Button) findViewById(R.id.activityItemDynamicButton2);
 
-        trip = (Trip) getIntent().getSerializableExtra("trip");
-        int locationIndex = intent.getIntExtra("locationIndex", -1);
-        Location location = trip.getLocations().get(locationIndex);
+        tripIndex = intent.getIntExtra("tripIndex", -1);
+        trip = trips.get(tripIndex);
+        locationIndex =  intent.getIntExtra("locationIndex", -1);
+        location = trip.getLocations().get(locationIndex);
         locationArrive = location.getArrive();
         locationDepart = location.getDepart();
-        int activityItemIndex = intent.getIntExtra("activityItemIndex", -1);
+        activityItemIndex = intent.getIntExtra("activityItemIndex", -1);
 
         if(activityItemIndex != -1) {
             activityItem = location.getActivityItems().get(activityItemIndex);
@@ -61,14 +81,15 @@ public class ActivityItemActivity extends AppCompatActivity {
             dateButton.setText(activityItem.getDate());
             timeButton.setText(activityItem.getTime());
             descriptionField.setText(activityItem.getDescription());
-            dynamicButton1.setText("Update");
+            dynamicButton1.setText("Save");
             dynamicButton2.setText("Delete");
         }
         else
         {
             activityItem = new ActivityItem();
-            dynamicButton1.setText("Save");
+            dynamicButton1.setText("Add");
             dynamicButton2.setText("Cancel");
+            addingNew = true;
         }
     }
 
@@ -82,13 +103,77 @@ public class ActivityItemActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id==R.id.action_itinerary) {
-            Intent intent = new Intent(this, ItineraryActivity.class);
-            intent.putExtra("trip", trip);
-            startActivity(intent);
-            return true;
+            if(activityItem.equals(new ActivityItem(activityItemNameField.getText().toString(), dateButton.getText().toString(), timeButton.getText().toString(), descriptionField.getText().toString()))) {
+                Intent intent = new Intent(this, ItineraryActivity.class);
+                intent.putExtra("tripIndex", tripIndex);
+                startActivity(intent);
+                return true;
+            }
+            else {
+                Toast.makeText(this, "Please SAVE the activity first", Toast.LENGTH_SHORT).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onActivityItemDynamic1(View view) {
+
+        try {
+            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+
+            String name = activityItemNameField.getText().toString();
+            String date = dateButton.getText().toString();
+            String time = timeButton.getText().toString();
+            String description = descriptionField.getText().toString();
+
+            if(addingNew) {
+                if(name.compareTo("Activity Name") == 0) {
+                    Toast.makeText(this, "Please provide a Activity Name", Toast.LENGTH_SHORT).show();
+                }
+                else if(date.compareTo("Date") == 0) {
+                    Toast.makeText(this, "Please provide a Date", Toast.LENGTH_SHORT).show();
+                }
+                else if(time.compareTo("Time") == 0) {
+                    Toast.makeText(this, "Please provide a Time", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    activityItem.setActivityName(name);
+                    activityItem.setDate(date);
+                    activityItem.setTime(time);
+                    activityItem.setDescription(description);
+                    location.getActivityItems().add(activityItem);
+                    tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                    finish();
+                }
+            }
+            else {
+                activityItem.setActivityName(name);
+                activityItem.setDate(date);
+                activityItem.setTime(time);
+                activityItem.setDescription(description);
+                tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                finish();
+            }
+        }
+        catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onActivityItemDynamic2(View view) {
+        if(addingNew) {
+            finish();
+        }
+        else {
+            try {
+                ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+                tripSvc.delete(trip, tripIndex, locationIndex, activityItemIndex);
+                finish();
+            } catch (Exception e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void selectDate(View view) {
@@ -135,7 +220,6 @@ public class ActivityItemActivity extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
             String date = (month + 1) + "-" + day + "-" + year;
-            activityItem.setDate(date);
             dateButton.setText(date);
         }
     }
@@ -201,7 +285,6 @@ public class ActivityItemActivity extends AppCompatActivity {
             else {
                 time = "" + (hourOfDay-12) + ":" + minuteString + " PM";
             }
-            activityItem.setTime(time);
             timeButton.setText(time);
         }
     }

@@ -26,8 +26,8 @@ public class ActivityItem implements Serializable {
         this.description = description;
     }
 
-    public boolean isComplete() {
-        return activityName.compareTo("")!=0 && date.compareTo("")!=0 && time.compareTo("")!=0;
+    public boolean equals(ActivityItem activityItem) {
+        return activityName.compareTo(activityItem.getActivityName())==0 && date.compareTo(activityItem.getDate())==0 && time.compareTo(activityItem.getTime())==0 && description.compareTo(activityItem.getDescription())==0;
     }
 
     public String getActivityName() {

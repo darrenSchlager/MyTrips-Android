@@ -1,5 +1,7 @@
 package com.regis.darren.mytrips.service;
 
+import com.regis.darren.mytrips.domain.ActivityItem;
+import com.regis.darren.mytrips.domain.Location;
 import com.regis.darren.mytrips.domain.Trip;
 
 import android.content.Context;
@@ -32,20 +34,67 @@ public class TripSvcSIOImpl implements ITripSvc {
 
     private TripSvcSIOImpl(Context context) throws Exception{ //Singleton Pattern: private constructor
         this.context = context;
+        File file = new File(context.getFilesDir(), FILE_NAME);
+        if(!file.exists()){
+            writeFile();
+        }
         readFile();
     }
 
     @Override
     public Trip create(Trip trip) throws Exception {
 
+        cache.add(trip);
+        writeFile();
         return trip;
     }
 
     @Override
-    public List<Trip> retrieveAll() throws Exception {
-        List<Trip> list = new ArrayList();
+    public List<Trip> retrieveAll() {
+        return cache;
+    }
 
-        return list;
+    @Override
+    public Trip update(Trip trip, int tripIndex) throws Exception {
+        if(tripIndex >= 0 && tripIndex<cache.size()) {
+            cache.set(tripIndex, trip);
+            writeFile();
+            return trip;
+        }
+        return null;
+    }
+
+    @Override
+    public Trip delete(Trip trip, int tripIndex, int locationIndex, int activityItemIndex) {
+        if(tripIndex >=0 && tripIndex<cache.size()) {
+            Trip deletedTrip = new Trip(trip.getName(), trip.getStartDate(), trip.getEndDate());
+            Trip t = cache.get(tripIndex);
+            if(locationIndex>=0 && locationIndex<cache.get(tripIndex).getLocations().size()) {
+                Location l = t.getLocations().get(locationIndex);
+                List<Location> locations= new ArrayList();
+                locations.add(new Location(l.getCity(), l.getStateCountry(), l.getArrive(), l.getDepart()));
+                deletedTrip.setLocations(locations);
+                if(activityItemIndex>=0 && activityItemIndex<=l.getActivityItems().size()) {
+                    ActivityItem a = l.getActivityItems().get(activityItemIndex);
+                    List<ActivityItem> activityItems = new ArrayList<>();
+                    activityItems.add(new ActivityItem(a.getActivityName(), a.getDate(), a.getTime(), a.getDescription()));
+                    deletedTrip.getLocations().get(locationIndex).setActivityItems(activityItems);
+                    l.getActivityItems().remove(activityItemIndex);
+                    return deletedTrip;
+                }
+                else {
+                    t.getLocations().remove(locationIndex);
+                    return deletedTrip;
+                }
+            }
+            else {
+                cache.remove(tripIndex);
+                return deletedTrip;
+            }
+        }
+        else {
+            return null;
+        }
     }
 
     private void readFile() throws Exception {
@@ -55,7 +104,6 @@ public class TripSvcSIOImpl implements ITripSvc {
             cache = (List<Trip>)ois.readObject(); //serialize contents of the file into cache
             ois.close();
             fis.close();
-
         } catch(Exception e) {
             Log.e(TAG, "EXCEPTION: "+e.getMessage()); //log error
             throw e;

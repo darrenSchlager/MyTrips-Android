@@ -9,8 +9,8 @@ import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private final String ADMIN_USERNAME = "jdoe";
-    private final String ADMIN_PASSWORD = "1234";
+    private final String ADMIN_USERNAME = "";
+    private final String ADMIN_PASSWORD = "";
 
     private EditText usernameField;
     private EditText passwordField;

@@ -26,8 +26,8 @@ public class Trip implements Serializable { //Serializable allows objects of thi
         this.endDate = endDate;
     }
 
-    public boolean isComplete() {
-        return name.compareTo("")!=0 && startDate.compareTo("")!=0 && endDate.compareTo("")!=0;
+    public boolean equals(Trip trip) {
+        return name.compareTo(trip.getName())==0 && startDate.compareTo(trip.getStartDate())==0 && endDate.compareTo(trip.getEndDate())==0;
     }
 
     public String getName() { return name; }

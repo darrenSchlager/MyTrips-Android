@@ -1,6 +1,5 @@
 package com.regis.darren.mytrips;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -16,30 +15,39 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.regis.darren.mytrips.domain.ActivityItem;
 import com.regis.darren.mytrips.domain.Location;
 import com.regis.darren.mytrips.domain.Trip;
+import com.regis.darren.mytrips.service.ITripSvc;
+import com.regis.darren.mytrips.service.TripSvcSIOImpl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class LocationActivity extends AppCompatActivity {
 
-    static Trip trip;
-    int locationIndex;
-    static Location location;
-    static String tripStartDate;
-    static String tripEndDate;
+    private int tripIndex;
+    private int locationIndex;
+    private List<Trip> trips = new ArrayList<Trip>();
+    private static Trip trip;
+    private static Location location;
+    private static String tripStartDate;
+    private static String tripEndDate;
     private Context context = null;
     private ListView listView = null;
-    private ListAdapter adapter = null;
+    private ArrayAdapter adapter = null;
 
-    static boolean settingArrive;
-    static Button arriveButton;
-    static Button departButton;
+    private Boolean addingNew = false;
+
+    private EditText cityField;
+    private EditText stateCountryField;
+    private static boolean settingArrive;
+    private static Button arriveButton;
+    private static Button departButton;
 
     private Button dynamicButton1;
     private Button dynamicButton2;
@@ -49,15 +57,23 @@ public class LocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
+        try {
+            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+            trips = tripSvc.retrieveAll();
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
         Intent intent = getIntent();
-        EditText cityField = (EditText) findViewById(R.id.city);
-        EditText stateCountryField = (EditText) findViewById(R.id.stateCountry);
+        cityField = (EditText) findViewById(R.id.city);
+        stateCountryField = (EditText) findViewById(R.id.stateCountry);
         arriveButton = (Button) findViewById(R.id.arrive);
         departButton = (Button) findViewById(R.id.depart);
         dynamicButton1 = (Button) findViewById(R.id.locationDynamicButton1);
         dynamicButton2 = (Button) findViewById(R.id.locationDynamicButton2);
 
-        trip = (Trip) intent.getSerializableExtra("trip");
+        tripIndex = intent.getIntExtra("tripIndex", -1);
+        trip = trips.get(tripIndex);
         tripStartDate = trip.getStartDate();
         tripEndDate = trip.getEndDate();
         locationIndex = intent.getIntExtra("locationIndex", -1);
@@ -68,18 +84,23 @@ public class LocationActivity extends AppCompatActivity {
             stateCountryField.setText(location.getStateCountry());
             arriveButton.setText(location.getArrive());
             departButton.setText(location.getDepart());
-            dynamicButton1.setText("Update");
+            dynamicButton1.setText("Save");
             dynamicButton2.setText("Delete");
-
-            initWithActivityItems();
         }
         else
         {
             location = new Location();
-            dynamicButton1.setText("Save");
+            dynamicButton1.setText("Add");
             dynamicButton2.setText("Cancel");
+            addingNew = true;
         }
+        initWithActivityItems();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -92,10 +113,20 @@ public class LocationActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id==R.id.action_itinerary) {
-            Intent intent = new Intent(this, ItineraryActivity.class);
-            intent.putExtra("trip", trip);
-            startActivity(intent);
-            return true;
+            if(!addingNew) {
+                if(location.equals(new Location(cityField.getText().toString(), stateCountryField.getText().toString(), arriveButton.getText().toString(), departButton.getText().toString()))) {
+                    Intent intent = new Intent(this, ItineraryActivity.class);
+                    intent.putExtra("tripIndex", tripIndex);
+                    startActivity(intent);
+                    return true;
+                }
+                else {
+                    Toast.makeText(this, "Please SAVE the location first", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else {
+                Toast.makeText(this, "Please ADD the location first", Toast.LENGTH_SHORT).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -111,21 +142,97 @@ public class LocationActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(context, ActivityItemActivity.class);
-                intent.putExtra("trip", trip);
-                intent.putExtra("locationIndex", locationIndex);
-                intent.putExtra("activityItemIndex", position);
-                startActivity(intent);
+                if(location.equals(new Location(cityField.getText().toString(), stateCountryField.getText().toString(), arriveButton.getText().toString(), departButton.getText().toString()))) {
+                    Intent intent = new Intent(context, ActivityItemActivity.class);
+                    intent.putExtra("tripIndex", tripIndex);
+                    intent.putExtra("locationIndex", locationIndex);
+                    intent.putExtra("activityItemIndex", position);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(context, "Please SAVE the location first", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     public void addActivity(View view) {
-        if(location.isComplete()) {
-            Intent intent = new Intent(this, ActivityItemActivity.class);
-            intent.putExtra("trip", trip);
-            intent.putExtra("locationIndex", locationIndex);
-            startActivity(intent);
+        if(!addingNew) {
+            if(location.equals(new Location(cityField.getText().toString(), stateCountryField.getText().toString(), arriveButton.getText().toString(), departButton.getText().toString()))) {
+                Intent intent = new Intent(this, ActivityItemActivity.class);
+                intent.putExtra("tripIndex", tripIndex);
+                intent.putExtra("locationIndex", locationIndex);
+                startActivity(intent);
+            }
+            else {
+                Toast.makeText(this, "Please SAVE the location first", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            Toast.makeText(this, "Please ADD the location first", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onLocationDynamic1(View view) {
+
+        try {
+            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+
+            String city = cityField.getText().toString();
+            String stateCountry = stateCountryField.getText().toString();
+            String arrive = arriveButton.getText().toString();
+            String depart = departButton.getText().toString();
+
+            if(addingNew) {
+                if(city.compareTo("City") == 0) {
+                    Toast.makeText(this, "Please provide a City", Toast.LENGTH_SHORT).show();
+                }
+                else if(stateCountry.compareTo("State/Country") == 0) {
+                    Toast.makeText(this, "Please provide a State/Country", Toast.LENGTH_SHORT).show();
+                }
+                else if(arrive.compareTo("Date") == 0) {
+                    Toast.makeText(this, "Please provide an Arrival Date", Toast.LENGTH_SHORT).show();
+                }
+                else if(depart.compareTo("Date") == 0) {
+                    Toast.makeText(this, "Please provide a Departure Date", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    location.setCity(city);
+                    location.setStateCountry(stateCountry);
+                    location.setArrive(arrive);
+                    location.setDepart(depart);
+                    trip.getLocations().add(location);
+                    tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                    finish();
+                }
+            }
+            else {
+                location.setCity(city);
+                location.setStateCountry(stateCountry);
+                location.setArrive(arrive);
+                location.setDepart(depart);
+                tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                finish();
+            }
+        }
+        catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onLocationDynamic2(View view) {
+        try {
+            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+
+            if(addingNew) {
+                finish();
+            }
+            else {
+                tripSvc.delete(trip, tripIndex, locationIndex, -1);
+                finish();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -160,11 +267,11 @@ public class LocationActivity extends AppCompatActivity {
             cTripEndDateTimeInMillis = cTripEndDate.getTimeInMillis();
 
             if (settingArrive) {
-                match = location.getArrive().split("-");
-                matchOther = location.getDepart().split("-");
+                match = arriveButton.getText().toString().split("-");
+                matchOther = departButton.getText().toString().split("-");
             } else {
-                match = location.getDepart().split("-");
-                matchOther = location.getArrive().split("-");
+                match = departButton.getText().toString().split("-");
+                matchOther = arriveButton.getText().toString().split("-");
             }
 
             if (match.length == 3) {
@@ -201,10 +308,8 @@ public class LocationActivity extends AppCompatActivity {
         public void onDateSet(DatePicker view, int year, int month, int day) {
             String date = (month + 1) + "-" + day + "-" + year;
             if (settingArrive) {
-                location.setArrive(date);
                 arriveButton.setText(date);
             } else {
-                location.setDepart(date);
                 departButton.setText(date);
             }
 

@@ -12,12 +12,20 @@ import android.widget.ExpandableListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.regis.darren.mytrips.domain.Location;
 import com.regis.darren.mytrips.domain.Trip;
+import com.regis.darren.mytrips.service.ITripSvc;
+import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItineraryActivity extends AppCompatActivity {
 
+    private int tripIndex;
+    private List<Trip> trips = new ArrayList<Trip>();
     static Trip trip;
     private Context context = null;
     private ExpandableListView expandableListView = null;
@@ -28,8 +36,16 @@ public class ItineraryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_itinerary);
 
+        try {
+            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+            trips = tripSvc.retrieveAll();
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
         Intent intent = getIntent();
-        trip = (Trip) intent.getSerializableExtra("trip");
+        tripIndex = intent.getIntExtra("tripIndex", -1);
+        trip = trips.get(tripIndex);
 
         TextView tripName = (TextView) findViewById(R.id.itineraryTripName);
         TextView startDate = (TextView) findViewById(R.id.itineraryStartDate);
