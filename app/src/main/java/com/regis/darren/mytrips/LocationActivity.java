@@ -30,7 +30,6 @@ import java.util.List;
 
 public class LocationActivity extends AppCompatActivity {
 
-    private boolean readyToDelete = false;
     private int tripIndex;
     private int locationIndex;
     private List<Trip> trips = new ArrayList<Trip>();
@@ -43,6 +42,7 @@ public class LocationActivity extends AppCompatActivity {
     private ArrayAdapter adapter = null;
 
     private Boolean addingNew = false;
+    private boolean readyToDelete = false;
 
     private EditText cityField;
     private EditText stateCountryField;
@@ -101,6 +101,8 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        readyToDelete = false;
+        dynamicButton2.setText("Delete");
         adapter.notifyDataSetChanged();
     }
 

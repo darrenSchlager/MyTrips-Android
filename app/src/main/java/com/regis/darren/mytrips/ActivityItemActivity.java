@@ -29,7 +29,6 @@ import java.util.List;
 
 public class ActivityItemActivity extends AppCompatActivity {
 
-    private boolean readyToDelete = false;
     private int tripIndex;
     private int locationIndex;
     private int activityItemIndex;
@@ -47,6 +46,7 @@ public class ActivityItemActivity extends AppCompatActivity {
     private EditText descriptionField;
 
     private Boolean addingNew = false;
+    private boolean readyToDelete = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +92,13 @@ public class ActivityItemActivity extends AppCompatActivity {
             dynamicButton2.setText("Cancel");
             addingNew = true;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        readyToDelete = false;
+        dynamicButton2.setText("Delete");
     }
 
     @Override

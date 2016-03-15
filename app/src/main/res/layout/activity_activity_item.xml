@@ -10,103 +10,121 @@
     tools:context="com.regis.darren.mytrips.ActivityItemActivity"
     android:focusableInTouchMode="true">
 
-    <EditText
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/activityName"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Activity Name"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        android:layout_marginTop="-10dp" />
+        android:id="@+id/relativeLayout"
+        android:layout_above="@+id/relativeLayout2"
+        android:layout_alignParentTop="true">
 
-    <TextView
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/activityName"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Activity Name"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_marginTop="-10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="   at   "
+            android:id="@+id/textView8"
+            android:layout_below="@+id/activityName"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:textColor="#181818"
+            android:layout_marginTop="15dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="selectDate"
+            android:text="Date"
+            android:id="@+id/date"
+            android:layout_below="@+id/activityName"
+            android:layout_toLeftOf="@+id/textView8"
+            android:layout_toStartOf="@+id/textView8"
+            android:textSize="17dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="selectTime"
+            android:text="Time"
+            android:id="@+id/time"
+            android:layout_below="@+id/activityName"
+            android:layout_toRightOf="@+id/textView8"
+            android:layout_toEndOf="@+id/textView8"
+            android:textSize="17dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴"
+            android:id="@+id/textView9"
+            android:textColor="#FF4C4C4C"
+            android:paddingBottom="5dp"
+            android:layout_below="@+id/date"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:id="@+id/textView10"
+            android:textStyle="bold"
+            android:textColor="#181818"
+            android:textSize="17dp"
+            android:layout_below="@+id/textView9"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="10dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/description"
+            android:layout_below="@+id/textView10"
+            android:layout_alignRight="@+id/textView9"
+            android:layout_alignEnd="@+id/textView9"
+            android:gravity="top"
+            android:layout_alignLeft="@+id/textView9"
+            android:layout_alignStart="@+id/textView9"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="   at   "
-        android:id="@+id/textView8"
-        android:layout_below="@+id/activityName"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:textColor="#181818"
-        android:layout_marginTop="15dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="selectDate"
-        android:text="Date"
-        android:id="@+id/date"
-        android:layout_below="@+id/activityName"
-        android:layout_toLeftOf="@+id/textView8"
-        android:layout_toStartOf="@+id/textView8"
-        android:textSize="17dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="selectTime"
-        android:text="Time"
-        android:id="@+id/time"
-        android:layout_below="@+id/activityName"
-        android:layout_toRightOf="@+id/textView8"
-        android:layout_toEndOf="@+id/textView8"
-        android:textSize="17dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴∵∴"
-        android:id="@+id/textView9"
-        android:textColor="#FF4C4C4C"
-        android:paddingBottom="5dp"
-        android:layout_below="@+id/date"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:id="@+id/textView10"
-        android:textStyle="bold"
-        android:textColor="#181818"
-        android:textSize="17dp"
-        android:layout_below="@+id/textView9"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/description"
-        android:layout_below="@+id/textView10"
-        android:layout_alignRight="@+id/textView9"
-        android:layout_alignEnd="@+id/textView9"
-        android:gravity="top"
-        android:layout_alignLeft="@+id/textView9"
-        android:layout_alignStart="@+id/textView9"
-        android:layout_above="@+id/activityItemDynamicButton2" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dynamic1"
-        android:onClick="onActivityItemDynamic1"
-        android:layout_alignTop="@+id/activityItemDynamicButton2"
-        android:layout_alignRight="@+id/date"
-        android:layout_alignEnd="@+id/date"
-        android:id="@+id/activityItemDynamicButton1" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dynamic2"
-        android:onClick="onActivityItemDynamic2"
-        android:id="@+id/activityItemDynamicButton2"
+        android:id="@+id/relativeLayout2"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/time"
-        android:layout_alignStart="@+id/time" />
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dynamic1"
+            android:onClick="onActivityItemDynamic1"
+            android:layout_alignTop="@+id/activityItemDynamicButton2"
+            android:id="@+id/activityItemDynamicButton1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dynamic2"
+            android:onClick="onActivityItemDynamic2"
+            android:id="@+id/activityItemDynamicButton2"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/activityItemDynamicButton1"
+            android:layout_toEndOf="@+id/activityItemDynamicButton1" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -29,7 +29,7 @@ import java.util.List;
 
 public class TripActivity extends AppCompatActivity {
 
-    private boolean readyToDelete = false;
+
     private int tripIndex;
     private List<Trip> trips = new ArrayList<Trip>();
     private static Trip trip;
@@ -38,9 +38,9 @@ public class TripActivity extends AppCompatActivity {
     private ArrayAdapter adapter = null;
 
     private Boolean addingNew = false;
+    private boolean readyToDelete = false;
 
     private EditText tripNameField;
-
     private static boolean settingStartDate;
     private static Button startDateButton;
     private static Button endDateButton;
@@ -87,6 +87,8 @@ public class TripActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        readyToDelete = false;
+        dynamicButton2.setText("Delete");
         adapter.notifyDataSetChanged();
     }
 

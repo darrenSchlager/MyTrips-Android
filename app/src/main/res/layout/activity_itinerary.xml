@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="   to   "
+        android:text="     to     "
         android:id="@+id/textView13"
         android:layout_below="@+id/itineraryTripName"
         android:layout_centerHorizontal="true" />

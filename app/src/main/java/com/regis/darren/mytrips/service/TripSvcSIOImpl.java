@@ -65,7 +65,7 @@ public class TripSvcSIOImpl implements ITripSvc {
     }
 
     @Override
-    public Trip delete(Trip trip, int tripIndex, int locationIndex, int activityItemIndex) {
+    public Trip delete(Trip trip, int tripIndex, int locationIndex, int activityItemIndex) throws Exception{
         if(tripIndex >=0 && tripIndex<cache.size()) {
             Trip deletedTrip = new Trip(trip.getName(), trip.getStartDate(), trip.getEndDate());
             Trip t = cache.get(tripIndex);
@@ -80,15 +80,18 @@ public class TripSvcSIOImpl implements ITripSvc {
                     activityItems.add(new ActivityItem(a.getActivityName(), a.getDate(), a.getTime(), a.getDescription()));
                     deletedTrip.getLocations().get(locationIndex).setActivityItems(activityItems);
                     l.getActivityItems().remove(activityItemIndex);
+                    writeFile();
                     return deletedTrip;
                 }
                 else {
                     t.getLocations().remove(locationIndex);
+                    writeFile();
                     return deletedTrip;
                 }
             }
             else {
                 cache.remove(tripIndex);
+                writeFile();
                 return deletedTrip;
             }
         }
