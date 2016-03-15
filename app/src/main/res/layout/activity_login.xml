@@ -60,7 +60,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/username"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="admin" />
     </LinearLayout>
 
     <LinearLayout
@@ -81,7 +82,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/password"
             android:layout_weight="1"
-            android:password="true" />
+            android:password="true"
+            android:text="password" />
     </LinearLayout>
 
     <Button
