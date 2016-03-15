@@ -78,7 +78,7 @@ public class TripSvcSIOImpl implements ITripSvc {
                     ActivityItem a = l.getActivityItems().get(activityItemIndex);
                     List<ActivityItem> activityItems = new ArrayList<>();
                     activityItems.add(new ActivityItem(a.getActivityName(), a.getDate(), a.getTime(), a.getDescription()));
-                    deletedTrip.getLocations().get(locationIndex).setActivityItems(activityItems);
+                    deletedTrip.getLocations().get(0).setActivityItems(activityItems);
                     l.getActivityItems().remove(activityItemIndex);
                     writeFile();
                     return deletedTrip;
