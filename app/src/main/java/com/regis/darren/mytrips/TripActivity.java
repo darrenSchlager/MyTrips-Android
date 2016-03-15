@@ -88,7 +88,9 @@ public class TripActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         readyToDelete = false;
-        dynamicButton2.setText("Delete");
+        if(!addingNew) {
+            dynamicButton2.setText("Delete");
+        }
         adapter.notifyDataSetChanged();
     }
 
@@ -173,14 +175,14 @@ public class TripActivity extends AppCompatActivity {
             String endDate = endDateButton.getText().toString();
 
             if(addingNew) {
-                if(tripName.compareTo("Trip Name") == 0) {
+                if(tripName.compareTo("") == 0) {
                     Toast.makeText(this, "Please provide a Trip Name", Toast.LENGTH_SHORT).show();
                 }
-                else if(startDate.compareTo("Date") == 0) {
-                    Toast.makeText(this, "Please provide a Start Date", Toast.LENGTH_SHORT).show();
+                else if(startDate.compareTo("") == 0) {
+                    Toast.makeText(this, "Please provide a Start date", Toast.LENGTH_SHORT).show();
                 }
-                else if(endDate.compareTo("Date") == 0) {
-                    Toast.makeText(this, "Please provide a End Date", Toast.LENGTH_SHORT).show();
+                else if(endDate.compareTo("") == 0) {
+                    Toast.makeText(this, "Please provide a End date", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     trip.setName(tripName);

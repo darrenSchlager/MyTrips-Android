@@ -102,7 +102,9 @@ public class LocationActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         readyToDelete = false;
-        dynamicButton2.setText("Delete");
+        if(!addingNew) {
+            dynamicButton2.setText("Delete");
+        }
         adapter.notifyDataSetChanged();
     }
 
@@ -187,17 +189,17 @@ public class LocationActivity extends AppCompatActivity {
             String depart = departButton.getText().toString();
 
             if(addingNew) {
-                if(city.compareTo("City") == 0) {
+                if(city.compareTo("") == 0) {
                     Toast.makeText(this, "Please provide a City", Toast.LENGTH_SHORT).show();
                 }
-                else if(stateCountry.compareTo("State/Country") == 0) {
+                else if(stateCountry.compareTo("") == 0) {
                     Toast.makeText(this, "Please provide a State/Country", Toast.LENGTH_SHORT).show();
                 }
-                else if(arrive.compareTo("Date") == 0) {
-                    Toast.makeText(this, "Please provide an Arrival Date", Toast.LENGTH_SHORT).show();
+                else if(arrive.compareTo("") == 0) {
+                    Toast.makeText(this, "Please provide an Arrival date", Toast.LENGTH_SHORT).show();
                 }
-                else if(depart.compareTo("Date") == 0) {
-                    Toast.makeText(this, "Please provide a Departure Date", Toast.LENGTH_SHORT).show();
+                else if(depart.compareTo("") == 0) {
+                    Toast.makeText(this, "Please provide a Departure date", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     location.setCity(city);

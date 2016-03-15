@@ -98,7 +98,9 @@ public class ActivityItemActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         readyToDelete = false;
-        dynamicButton2.setText("Delete");
+        if(!addingNew) {
+            dynamicButton2.setText("Delete");
+        }
     }
 
     @Override
@@ -136,13 +138,13 @@ public class ActivityItemActivity extends AppCompatActivity {
             String description = descriptionField.getText().toString();
 
             if(addingNew) {
-                if(name.compareTo("Activity Name") == 0) {
+                if(name.compareTo("") == 0) {
                     Toast.makeText(this, "Please provide a Activity Name", Toast.LENGTH_SHORT).show();
                 }
-                else if(date.compareTo("Date") == 0) {
+                else if(date.compareTo("") == 0) {
                     Toast.makeText(this, "Please provide a Date", Toast.LENGTH_SHORT).show();
                 }
-                else if(time.compareTo("Time") == 0) {
+                else if(time.compareTo("") == 0) {
                     Toast.makeText(this, "Please provide a Time", Toast.LENGTH_SHORT).show();
                 }
                 else {
