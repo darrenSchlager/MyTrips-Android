@@ -29,6 +29,7 @@ import java.util.List;
 
 public class TripActivity extends AppCompatActivity {
 
+    private boolean readyToDelete = false;
     private int tripIndex;
     private List<Trip> trips = new ArrayList<Trip>();
     private static Trip trip;
@@ -208,8 +209,14 @@ public class TripActivity extends AppCompatActivity {
                 finish();
             }
             else {
-                tripSvc.delete(trip, tripIndex, -1, -1);
-                finish();
+                if(readyToDelete) {
+                    tripSvc.delete(trip, tripIndex, -1, -1);
+                    finish();
+                }
+                else {
+                    dynamicButton2.setText("Confirm Delete");
+                    readyToDelete = true;
+                }
             }
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();

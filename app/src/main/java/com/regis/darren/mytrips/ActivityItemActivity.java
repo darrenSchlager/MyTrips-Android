@@ -29,6 +29,7 @@ import java.util.List;
 
 public class ActivityItemActivity extends AppCompatActivity {
 
+    private boolean readyToDelete = false;
     private int tripIndex;
     private int locationIndex;
     private int activityItemIndex;
@@ -166,12 +167,18 @@ public class ActivityItemActivity extends AppCompatActivity {
             finish();
         }
         else {
-            try {
-                ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
-                tripSvc.delete(trip, tripIndex, locationIndex, activityItemIndex);
-                finish();
-            } catch (Exception e) {
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            if(readyToDelete) {
+                try {
+                    ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+                    tripSvc.delete(trip, tripIndex, locationIndex, activityItemIndex);
+                    finish();
+                } catch (Exception e) {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            else {
+                dynamicButton2.setText("Confirm Delete");
+                readyToDelete = true;
             }
         }
     }

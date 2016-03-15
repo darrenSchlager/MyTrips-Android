@@ -30,6 +30,7 @@ import java.util.List;
 
 public class LocationActivity extends AppCompatActivity {
 
+    private boolean readyToDelete = false;
     private int tripIndex;
     private int locationIndex;
     private List<Trip> trips = new ArrayList<Trip>();
@@ -228,8 +229,14 @@ public class LocationActivity extends AppCompatActivity {
                 finish();
             }
             else {
-                tripSvc.delete(trip, tripIndex, locationIndex, -1);
-                finish();
+                if(readyToDelete) {
+                    tripSvc.delete(trip, tripIndex, locationIndex, -1);
+                    finish();
+                }
+                else {
+                    dynamicButton2.setText("Confirm Delete");
+                    readyToDelete = true;
+                }
             }
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
