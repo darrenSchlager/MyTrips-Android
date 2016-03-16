@@ -38,7 +38,9 @@ public class TripSvcSIOImpl implements ITripSvc {
         if(!file.exists()){
             writeFile();
         }
-        readFile();
+        else {
+            readFile();
+        }
     }
 
     @Override

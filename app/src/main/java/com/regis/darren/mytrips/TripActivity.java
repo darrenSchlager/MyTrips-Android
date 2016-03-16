@@ -29,6 +29,7 @@ import java.util.List;
 
 public class TripActivity extends AppCompatActivity {
 
+    private ITripSvc tripSvc;
 
     private int tripIndex;
     private List<Trip> trips = new ArrayList<Trip>();
@@ -53,7 +54,7 @@ public class TripActivity extends AppCompatActivity {
         setContentView(R.layout.activity_trip);
 
         try {
-            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+            tripSvc = TripSvcSIOImpl.getInstance(this);
             trips = tripSvc.retrieveAll();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -166,64 +167,63 @@ public class TripActivity extends AppCompatActivity {
     }
 
     public void onTripDynamic1(View view) {
+        String tripName = tripNameField.getText().toString();
+        String startDate = startDateButton.getText().toString();
+        String endDate = endDateButton.getText().toString();
 
-        try {
-            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
-
-            String tripName = tripNameField.getText().toString();
-            String startDate = startDateButton.getText().toString();
-            String endDate = endDateButton.getText().toString();
-
-            if(addingNew) {
-                if(tripName.compareTo("") == 0) {
-                    Toast.makeText(this, "Please provide a Trip Name", Toast.LENGTH_SHORT).show();
-                }
-                else if(startDate.compareTo("") == 0) {
-                    Toast.makeText(this, "Please provide a Start date", Toast.LENGTH_SHORT).show();
-                }
-                else if(endDate.compareTo("") == 0) {
-                    Toast.makeText(this, "Please provide a End date", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    trip.setName(tripName);
-                    trip.setStartDate(startDate);
-                    trip.setEndDate(endDate);
-                    tripSvc.create(trip);
-                    finish();
-                }
+        if(addingNew) {
+            if(tripName.compareTo("") == 0) {
+                Toast.makeText(this, "Please provide a Trip Name", Toast.LENGTH_SHORT).show();
+            }
+            else if(startDate.compareTo("") == 0) {
+                Toast.makeText(this, "Please provide a Start date", Toast.LENGTH_SHORT).show();
+            }
+            else if(endDate.compareTo("") == 0) {
+                Toast.makeText(this, "Please provide a End date", Toast.LENGTH_SHORT).show();
             }
             else {
                 trip.setName(tripName);
                 trip.setStartDate(startDate);
                 trip.setEndDate(endDate);
-                tripSvc.update(trip, tripIndex);
+                try {
+                    tripSvc.create(trip);
+                }
+                catch (Exception e) {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 finish();
             }
         }
-        catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        else {
+            trip.setName(tripName);
+            trip.setStartDate(startDate);
+            trip.setEndDate(endDate);
+            try {
+                tripSvc.update(trip, tripIndex);
+            } catch (Exception e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            finish();
         }
     }
 
     public void onTripDynamic2(View view) {
-        try {
-            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
-
-            if(addingNew) {
+        if(addingNew) {
+            finish();
+        }
+        else {
+            if(readyToDelete) {
+                try {
+                    tripSvc.delete(trip, tripIndex, -1, -1);
+                } catch (Exception e) {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 finish();
             }
             else {
-                if(readyToDelete) {
-                    tripSvc.delete(trip, tripIndex, -1, -1);
-                    finish();
-                }
-                else {
-                    dynamicButton2.setText("Confirm Delete");
-                    readyToDelete = true;
-                }
+                dynamicButton2.setText("Confirm Delete");
+                readyToDelete = true;
             }
-        } catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

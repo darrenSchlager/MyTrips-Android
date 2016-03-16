@@ -24,6 +24,8 @@ import java.util.List;
 
 public class ItineraryActivity extends AppCompatActivity {
 
+    private ITripSvc tripSvc;
+
     private int tripIndex;
     private List<Trip> trips = new ArrayList<Trip>();
     static Trip trip;
@@ -37,7 +39,7 @@ public class ItineraryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_itinerary);
 
         try {
-            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+            tripSvc = TripSvcSIOImpl.getInstance(this);
             trips = tripSvc.retrieveAll();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();

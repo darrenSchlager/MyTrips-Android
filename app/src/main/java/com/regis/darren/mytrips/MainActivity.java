@@ -19,6 +19,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ITripSvc tripSvc;
+
     private Context context = null;
     private ListView listView = null;
     private List<Trip> trips = new ArrayList<Trip>();
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try {
-            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+            tripSvc = TripSvcSIOImpl.getInstance(this);
             trips = tripSvc.retrieveAll();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();

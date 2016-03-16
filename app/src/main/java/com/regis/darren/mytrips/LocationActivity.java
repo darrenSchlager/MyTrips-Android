@@ -30,6 +30,8 @@ import java.util.List;
 
 public class LocationActivity extends AppCompatActivity {
 
+    private ITripSvc tripSvc;
+
     private int tripIndex;
     private int locationIndex;
     private List<Trip> trips = new ArrayList<Trip>();
@@ -59,7 +61,7 @@ public class LocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_location);
 
         try {
-            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+            tripSvc = TripSvcSIOImpl.getInstance(this);
             trips = tripSvc.retrieveAll();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -179,71 +181,69 @@ public class LocationActivity extends AppCompatActivity {
     }
 
     public void onLocationDynamic1(View view) {
+        String city = cityField.getText().toString();
+        String stateCountry = stateCountryField.getText().toString();
+        String arrive = arriveButton.getText().toString();
+        String depart = departButton.getText().toString();
 
-        try {
-            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
-
-            String city = cityField.getText().toString();
-            String stateCountry = stateCountryField.getText().toString();
-            String arrive = arriveButton.getText().toString();
-            String depart = departButton.getText().toString();
-
-            if(addingNew) {
-                if(city.compareTo("") == 0) {
-                    Toast.makeText(this, "Please provide a City", Toast.LENGTH_SHORT).show();
-                }
-                else if(stateCountry.compareTo("") == 0) {
-                    Toast.makeText(this, "Please provide a State/Country", Toast.LENGTH_SHORT).show();
-                }
-                else if(arrive.compareTo("") == 0) {
-                    Toast.makeText(this, "Please provide an Arrival date", Toast.LENGTH_SHORT).show();
-                }
-                else if(depart.compareTo("") == 0) {
-                    Toast.makeText(this, "Please provide a Departure date", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    location.setCity(city);
-                    location.setStateCountry(stateCountry);
-                    location.setArrive(arrive);
-                    location.setDepart(depart);
-                    trip.getLocations().add(location);
-                    tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
-                    finish();
-                }
+        if(addingNew) {
+            if(city.compareTo("") == 0) {
+                Toast.makeText(this, "Please provide a City", Toast.LENGTH_SHORT).show();
+            }
+            else if(stateCountry.compareTo("") == 0) {
+                Toast.makeText(this, "Please provide a State/Country", Toast.LENGTH_SHORT).show();
+            }
+            else if(arrive.compareTo("") == 0) {
+                Toast.makeText(this, "Please provide an Arrival date", Toast.LENGTH_SHORT).show();
+            }
+            else if(depart.compareTo("") == 0) {
+                Toast.makeText(this, "Please provide a Departure date", Toast.LENGTH_SHORT).show();
             }
             else {
                 location.setCity(city);
                 location.setStateCountry(stateCountry);
                 location.setArrive(arrive);
                 location.setDepart(depart);
-                tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                trip.getLocations().add(location);
+                try {
+                    tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                } catch (Exception e) {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 finish();
             }
         }
-        catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        else {
+            location.setCity(city);
+            location.setStateCountry(stateCountry);
+            location.setArrive(arrive);
+            location.setDepart(depart);
+            try {
+                tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+            } catch (Exception e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            finish();
         }
     }
 
     public void onLocationDynamic2(View view) {
-        try {
-            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
-
-            if(addingNew) {
+        if(addingNew) {
+            finish();
+        }
+        else {
+            if(readyToDelete) {
+                try {
+                    tripSvc.delete(trip, tripIndex, locationIndex, -1);
+                } catch (Exception e) {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 finish();
             }
             else {
-                if(readyToDelete) {
-                    tripSvc.delete(trip, tripIndex, locationIndex, -1);
-                    finish();
-                }
-                else {
-                    dynamicButton2.setText("Confirm Delete");
-                    readyToDelete = true;
-                }
+                dynamicButton2.setText("Confirm Delete");
+                readyToDelete = true;
             }
-        } catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

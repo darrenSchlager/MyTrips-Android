@@ -29,6 +29,8 @@ import java.util.List;
 
 public class ActivityItemActivity extends AppCompatActivity {
 
+    private ITripSvc tripSvc;
+
     private int tripIndex;
     private int locationIndex;
     private int activityItemIndex;
@@ -54,7 +56,7 @@ public class ActivityItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_activity_item);
 
         try {
-            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
+            tripSvc = TripSvcSIOImpl.getInstance(this);
             trips = tripSvc.retrieveAll();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -128,46 +130,46 @@ public class ActivityItemActivity extends AppCompatActivity {
     }
 
     public void onActivityItemDynamic1(View view) {
+        String name = activityItemNameField.getText().toString();
+        String date = dateButton.getText().toString();
+        String time = timeButton.getText().toString();
+        String description = descriptionField.getText().toString();
 
-        try {
-            ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
-
-            String name = activityItemNameField.getText().toString();
-            String date = dateButton.getText().toString();
-            String time = timeButton.getText().toString();
-            String description = descriptionField.getText().toString();
-
-            if(addingNew) {
-                if(name.compareTo("") == 0) {
-                    Toast.makeText(this, "Please provide a Activity Name", Toast.LENGTH_SHORT).show();
-                }
-                else if(date.compareTo("") == 0) {
-                    Toast.makeText(this, "Please provide a Date", Toast.LENGTH_SHORT).show();
-                }
-                else if(time.compareTo("") == 0) {
-                    Toast.makeText(this, "Please provide a Time", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    activityItem.setActivityName(name);
-                    activityItem.setDate(date);
-                    activityItem.setTime(time);
-                    activityItem.setDescription(description);
-                    location.getActivityItems().add(activityItem);
-                    tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
-                    finish();
-                }
+        if(addingNew) {
+            if(name.compareTo("") == 0) {
+                Toast.makeText(this, "Please provide a Activity Name", Toast.LENGTH_SHORT).show();
+            }
+            else if(date.compareTo("") == 0) {
+                Toast.makeText(this, "Please provide a Date", Toast.LENGTH_SHORT).show();
+            }
+            else if(time.compareTo("") == 0) {
+                Toast.makeText(this, "Please provide a Time", Toast.LENGTH_SHORT).show();
             }
             else {
                 activityItem.setActivityName(name);
                 activityItem.setDate(date);
                 activityItem.setTime(time);
                 activityItem.setDescription(description);
-                tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                location.getActivityItems().add(activityItem);
+                try {
+                    tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                } catch (Exception e) {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 finish();
             }
         }
-        catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        else {
+            activityItem.setActivityName(name);
+            activityItem.setDate(date);
+            activityItem.setTime(time);
+            activityItem.setDescription(description);
+            try {
+                tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+            } catch (Exception e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            finish();
         }
     }
 
@@ -178,12 +180,11 @@ public class ActivityItemActivity extends AppCompatActivity {
         else {
             if(readyToDelete) {
                 try {
-                    ITripSvc tripSvc = TripSvcSIOImpl.getInstance(this);
                     tripSvc.delete(trip, tripIndex, locationIndex, activityItemIndex);
-                    finish();
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+                finish();
             }
             else {
                 dynamicButton2.setText("Confirm Delete");

@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity { //this activity is currently not used (check the comment in the SplashScreenActivity to enable)
 
     private final String ADMIN_USERNAME = "admin";
     private final String ADMIN_PASSWORD = "password";
