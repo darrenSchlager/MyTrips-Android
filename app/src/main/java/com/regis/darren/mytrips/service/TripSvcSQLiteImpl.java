@@ -1,28 +1,24 @@
 package com.regis.darren.mytrips.service;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.regis.darren.mytrips.domain.Trip;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Darren on 3/21/16.
  */
-public class TripSvcSQLiteImpl extends SQLiteOpenHelper implements ITripSvc {
-
-    private final static String DBNAME = "trips.db";
-    private final static int DBVERSION = 1;
-    private final static String CREATEDB = "CREATE TABLE trip (trip_id int primary key, name text, start_date date, end_date date)";
+public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
 
     private static TripSvcSQLiteImpl instance = null;
-    //private Context context = null;
 
     private TripSvcSQLiteImpl(Context context) {
-        super(context, DBNAME, null, DBVERSION);
-        //this.context = context;
+        super(context);
     }
 
     public static TripSvcSQLiteImpl getInstance(Context context) {
@@ -33,36 +29,76 @@ public class TripSvcSQLiteImpl extends SQLiteOpenHelper implements ITripSvc {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATEDB);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
-
-    @Override
     public Trip create(Trip trip) throws Exception {
+        SQLiteDatabase db = getWritableDatabase();
+        String[] match;
+        String startDate, endDate;
+        match = trip.getStartDate().split("-");
+        startDate = match[2]+"-"+match[0]+"-"+match[1];
+        match = trip.getEndDate().split("-");
+        endDate = match[2]+"-"+match[0]+"-"+match[1];
 
+        ContentValues values = new ContentValues();
+        values.put("name", trip.getName());
+        values.put("start_date", startDate);
+        values.put("end_date", endDate);
+        db.insert("trip", null, values);
+        db.close();
         return trip;
     }
 
     @Override
     public List<Trip> retrieveAll() throws Exception {
-
-        return null;
+        SQLiteDatabase db = getReadableDatabase();
+        List<Trip> trips = new ArrayList();
+        Cursor cursor = db.query("trip", new String[]{"trip_id", "name", "start_date", "end_date"}, null, null, null, null, null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
+            Trip trip = getTrip(cursor);
+            trips.add(trip);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        db.close();
+        return trips;
     }
 
-    @Override
-    public Trip update(Trip trip, int tripIndex) throws Exception {
+    private Trip getTrip(Cursor cursor) {
+        String[] match;
+        String startDate, endDate;
+        match = cursor.getString(2).split("-");
+        startDate = match[1]+"-"+match[2]+"-"+match[0];
+        match = cursor.getString(3).split("-");
+        endDate = match[1]+"-"+match[2]+"-"+match[0];
 
+        Trip trip = new Trip(cursor.getInt(0), cursor.getString(1), startDate, endDate);
         return trip;
     }
 
     @Override
-    public Trip delete(Trip trip, int tripIndex, int locationIndex, int activityItemIndex) throws Exception {
+    public Trip update(Trip trip) throws Exception {
+        SQLiteDatabase db = getWritableDatabase();
+        String[] match;
+        String startDate, endDate;
+        match = trip.getStartDate().split("-");
+        startDate = match[2]+"-"+match[0]+"-"+match[1];
+        match = trip.getEndDate().split("-");
+        endDate = match[2]+"-"+match[0]+"-"+match[1];
 
+        ContentValues values = new ContentValues();
+        values.put("name", trip.getName());
+        values.put("start_date", startDate);
+        values.put("end_date", endDate);
+        db.update("trip", values, "trip_id=" + String.valueOf(trip.getTripId()), null);
+        db.close();
+        return trip;
+    }
+
+    @Override
+    public Trip delete(Trip trip) throws Exception {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("trip", "trip_id="+trip.getTripId(), null);
+        db.close();
         return trip;
     }
 

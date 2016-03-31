@@ -9,28 +9,50 @@ import java.util.List;
  */
 public class Location implements Serializable {
 
+    private int locationId;
     private String city;
     private String stateCountry;
     private String arrive;
     private String depart;
+    private int tripId;
     private List<ActivityItem> activityItems = new ArrayList();
 
     public Location() {
+        locationId = -1;
         city = "";
         stateCountry = "";
         arrive = "";
         depart = "";
+        tripId = -1;
     }
 
     public Location(String city, String stateCountry, String arrive, String depart) {
+        locationId = -1;
         this.city = city;
         this.stateCountry = stateCountry;
         this.arrive = arrive;
         this.depart = depart;
+        tripId = -1;
     }
 
     public boolean equals(Location location) {
         return city.compareTo(location.getCity())==0 && stateCountry.compareTo(location.getStateCountry())==0 && arrive.compareTo(location.getArrive())==0 && depart.compareTo(location.getDepart())==0;
+    }
+
+    public int getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(int locationId) {
+        this.locationId = locationId;
+    }
+
+    public int getTripId() {
+        return tripId;
+    }
+
+    public void setTripId(int tripId) {
+        this.tripId = tripId;
     }
 
     public String getCity() {

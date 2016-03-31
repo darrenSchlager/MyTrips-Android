@@ -12,6 +12,6 @@ import java.util.List;
 public interface ITripSvc {
     public Trip create(Trip trip) throws Exception;
     public List<Trip> retrieveAll() throws Exception;
-    public Trip update(Trip trip, int tripIndex) throws Exception;
-    public Trip delete(Trip trip, int tripIndex, int locationIndex, int activityItemIndex) throws Exception;
+    public Trip update(Trip trip) throws Exception;
+    public Trip delete(Trip trip) throws Exception;
 }

@@ -7,27 +7,49 @@ import java.io.Serializable;
  */
 public class ActivityItem implements Serializable {
 
+    private int activityItemId;
     private String activityName;
     private String date;
     private String time;
     private String description;
+    private int locationId;
 
     public ActivityItem() {
+        activityItemId = -1;
         activityName = "";
         date = "";
         time = "";
         description = "";
+        locationId = -1;
     }
 
     public ActivityItem(String activityName, String date, String time, String description) {
+        activityItemId = -1;
         this.activityName = activityName;
         this.date = date;
         this.time = time;
         this.description = description;
+        locationId = -1;
     }
 
     public boolean equals(ActivityItem activityItem) {
         return activityName.compareTo(activityItem.getActivityName())==0 && date.compareTo(activityItem.getDate())==0 && time.compareTo(activityItem.getTime())==0 && description.compareTo(activityItem.getDescription())==0;
+    }
+
+    public int getActivityItemId() {
+        return activityItemId;
+    }
+
+    public void setActivityItemId(int activityItemId) {
+        this.activityItemId = activityItemId;
+    }
+
+    public int getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(int locationId) {
+        this.locationId = locationId;
     }
 
     public String getActivityName() {
