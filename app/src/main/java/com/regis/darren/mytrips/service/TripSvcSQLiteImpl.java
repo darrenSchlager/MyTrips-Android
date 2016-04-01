@@ -43,6 +43,10 @@ public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
         values.put("start_date", startDate);
         values.put("end_date", endDate);
         db.insert("trip", null, values);
+        Cursor cursor = db.rawQuery("last_insert_rowid()", null);
+        cursor.moveToFirst();
+        trip.setTripId(cursor.getInt(0));
+        cursor.close();
         db.close();
         return trip;
     }
@@ -61,6 +65,15 @@ public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
         cursor.close();
         db.close();
         return trips;
+    }
+
+    @Override
+    public Cursor getCursor() throws Exception {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM trip", null);
+        cursor.moveToFirst();
+        db.close();
+        return cursor;
     }
 
     private Trip getTrip(Cursor cursor) {

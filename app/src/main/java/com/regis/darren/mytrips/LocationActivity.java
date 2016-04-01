@@ -206,7 +206,8 @@ public class LocationActivity extends AppCompatActivity {
                 location.setDepart(depart);
                 trip.getLocations().add(location);
                 try {
-                    tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                    trip.setTripId(tripIndex);
+                    tripSvc.update(trip);
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -219,7 +220,8 @@ public class LocationActivity extends AppCompatActivity {
             location.setArrive(arrive);
             location.setDepart(depart);
             try {
-                tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                trip.setTripId(tripIndex);
+                tripSvc.update(trip);
             } catch (Exception e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -233,8 +235,10 @@ public class LocationActivity extends AppCompatActivity {
         }
         else {
             if(readyToDelete) {
+                trip.getLocations().remove(locationIndex);
                 try {
-                    tripSvc.delete(trip, tripIndex, locationIndex, -1);
+                    trip.setTripId(tripIndex);
+                    tripSvc.update(trip);
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }

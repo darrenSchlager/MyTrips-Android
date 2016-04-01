@@ -4,6 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.regis.darren.mytrips.domain.Trip;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Darren on 3/30/16.
  */
@@ -17,7 +22,8 @@ public abstract class SvcSQLiteAbs extends SQLiteOpenHelper {
     private final static String DROP_LOCATION_TABLE = "DROP TABLE IF EXISTS location";
     private final static String CREATE_ACTIVITY_ITEM_TABLE = "CREATE TABLE activity_item (activity_item_id integer primary key autoincrement, activity_name text, activity_date date, activity_time time, description text, location_id integer, FOREIGN KEY(location_id) REFERENCES location(location_id))";
     private final static String DROP_ACTIVITY_ITEM_TABLE = "DROP TABLE IF EXISTS activity_itme";
-    protected SQLiteDatabase db = null;
+    //protected SQLiteDatabase db = null;
+    private List<Trip> currentTrips = new ArrayList();
 
     public SvcSQLiteAbs(Context context) {
         super(context, DBNAME, null, DBVERSION);
@@ -28,7 +34,10 @@ public abstract class SvcSQLiteAbs extends SQLiteOpenHelper {
         db.execSQL(CREATE_TRIP_TABLE);
         db.execSQL(CREATE_LOCATION_TABLE);
         db.execSQL(CREATE_ACTIVITY_ITEM_TABLE);
-        this.db = db;
+        //this.db = db;
+
+        //insert dummy row for testing
+        db.execSQL("INSERT INTO trip (name, start_date, end_date) VALUES ('Aspen', '2018-1-12', '2018-1-19')");
     }
 
     @Override

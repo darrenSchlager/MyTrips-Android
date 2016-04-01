@@ -152,7 +152,8 @@ public class ActivityItemActivity extends AppCompatActivity {
                 activityItem.setDescription(description);
                 location.getActivityItems().add(activityItem);
                 try {
-                    tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                    trip.setTripId(tripIndex);
+                    tripSvc.update(trip);
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -165,7 +166,8 @@ public class ActivityItemActivity extends AppCompatActivity {
             activityItem.setTime(time);
             activityItem.setDescription(description);
             try {
-                tripSvc.update(trip, getIntent().getIntExtra("tripIndex", -1));
+                trip.setTripId(tripIndex);
+                tripSvc.update(trip);
             } catch (Exception e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -179,8 +181,10 @@ public class ActivityItemActivity extends AppCompatActivity {
         }
         else {
             if(readyToDelete) {
+                location.getActivityItems().remove(activityItem);
                 try {
-                    tripSvc.delete(trip, tripIndex, locationIndex, activityItemIndex);
+                    trip.setTripId(tripIndex);
+                    tripSvc.update(trip);
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }

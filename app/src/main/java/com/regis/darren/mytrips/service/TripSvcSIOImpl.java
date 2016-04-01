@@ -9,6 +9,8 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
+
+import android.database.Cursor;
 import android.util.Log;
 
 /**
@@ -18,19 +20,15 @@ import android.util.Log;
 //Serialized IO
 public class TripSvcSIOImpl implements ITripSvc {
 
-    private static TripSvcSIOImpl instance = null; //Singleton Pattern: holds the object (at most one object can be created)
     private static final String FILE_NAME = "trips.sio";
     private static final String TAG = "TripSvcSIOImpl";
-    private List<Trip> cache = new ArrayList();
+    protected List<Trip> cache = new ArrayList();
+    protected List<Location> currentLoations = new ArrayList();
+    protected List<ActivityItem> currentActivityItems = new ArrayList();
     private Context context = null;
 
-    public static TripSvcSIOImpl getInstance(Context context) throws Exception{ //Singleton Pattern: static method used to create the single object
-        if(instance == null) {
-            instance = new TripSvcSIOImpl(context);
-        }
-        return instance;
 
-    }
+    private static TripSvcSIOImpl instance = null; //Singleton Pattern: holds the object (at most one object can be created)
 
     private TripSvcSIOImpl(Context context) throws Exception{ //Singleton Pattern: private constructor
         this.context = context;
@@ -41,6 +39,14 @@ public class TripSvcSIOImpl implements ITripSvc {
         else {
             readFile();
         }
+    }
+
+    public static TripSvcSIOImpl getInstance(Context context) throws Exception{ //Singleton Pattern: static method used to create the single object
+        if(instance == null) {
+            instance = new TripSvcSIOImpl(context);
+        }
+        return instance;
+
     }
 
     @Override
@@ -57,9 +63,9 @@ public class TripSvcSIOImpl implements ITripSvc {
     }
 
     @Override
-    public Trip update(Trip trip, int tripIndex) throws Exception {
-        if(tripIndex >= 0 && tripIndex<cache.size()) {
-            cache.set(tripIndex, trip);
+    public Trip update(Trip trip) throws Exception {
+        if(trip.getTripId() >= 0 && trip.getTripId()<cache.size()) {
+            cache.set(trip.getTripId(), trip);
             writeFile();
             return trip;
         }
@@ -67,42 +73,19 @@ public class TripSvcSIOImpl implements ITripSvc {
     }
 
     @Override
-    public Trip delete(Trip trip, int tripIndex, int locationIndex, int activityItemIndex) throws Exception{
-        if(tripIndex >=0 && tripIndex<cache.size()) {
+    public Trip delete(Trip trip) throws Exception{
+        if(trip.getTripId() >=0 && trip.getTripId()<cache.size()) {
             Trip deletedTrip = new Trip(trip.getName(), trip.getStartDate(), trip.getEndDate());
-            Trip t = cache.get(tripIndex);
-            if(locationIndex>=0 && locationIndex<cache.get(tripIndex).getLocations().size()) {
-                Location l = t.getLocations().get(locationIndex);
-                List<Location> locations= new ArrayList();
-                locations.add(new Location(l.getCity(), l.getStateCountry(), l.getArrive(), l.getDepart()));
-                deletedTrip.setLocations(locations);
-                if(activityItemIndex>=0 && activityItemIndex<=l.getActivityItems().size()) {
-                    ActivityItem a = l.getActivityItems().get(activityItemIndex);
-                    List<ActivityItem> activityItems = new ArrayList<>();
-                    activityItems.add(new ActivityItem(a.getActivityName(), a.getDate(), a.getTime(), a.getDescription()));
-                    deletedTrip.getLocations().get(0).setActivityItems(activityItems);
-                    l.getActivityItems().remove(activityItemIndex);
-                    writeFile();
-                    return deletedTrip;
-                }
-                else {
-                    t.getLocations().remove(locationIndex);
-                    writeFile();
-                    return deletedTrip;
-                }
-            }
-            else {
-                cache.remove(tripIndex);
-                writeFile();
-                return deletedTrip;
-            }
+            cache.remove(trip.getTripId());
+            writeFile();
+            return deletedTrip;
         }
         else {
             return null;
         }
     }
 
-    private void readFile() throws Exception {
+    protected void readFile() throws Exception {
         try {
             FileInputStream fis = context.openFileInput(FILE_NAME);
             ObjectInputStream ois = new ObjectInputStream(fis);
@@ -110,12 +93,12 @@ public class TripSvcSIOImpl implements ITripSvc {
             ois.close();
             fis.close();
         } catch(Exception e) {
-            Log.e(TAG, "EXCEPTION: "+e.getMessage()); //log error
+            Log.e(TAG, "EXCEPTION: " + e.getMessage()); //log error
             throw e;
         }
     }
 
-    private void writeFile() throws Exception {
+    protected void writeFile() throws Exception {
         try {
             FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -128,4 +111,8 @@ public class TripSvcSIOImpl implements ITripSvc {
         }
     }
 
+    @Override
+    public Cursor getCursor() throws Exception {
+        return null;
+    }
 }
