@@ -2,17 +2,21 @@ package com.regis.darren.mytrips;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.regis.darren.mytrips.domain.Trip;
 import com.regis.darren.mytrips.service.ITripSvc;
-import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+//import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+import com.regis.darren.mytrips.service.TripSvcSQLiteImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private Context context = null;
     private ListView listView = null;
     private List<Trip> trips = new ArrayList<Trip>();
-    private ArrayAdapter adapter = null;
+    //private ArrayAdapter adapter = null;
+    private CursorAdapter adapter = null;
 
 
     @Override
@@ -33,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try {
-            tripSvc = TripSvcSIOImpl.getInstance(this);
+            //tripSvc = TripSvcSIOImpl.getInstance(this);
+            tripSvc = TripSvcSQLiteImpl.getInstance(this);
             trips = tripSvc.retrieveAll();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -52,7 +58,20 @@ public class MainActivity extends AppCompatActivity {
         context = this;
         listView = (ListView) findViewById(R.id.tripListView);
 
-        adapter = new ArrayAdapter<Trip>(context, android.R.layout.simple_list_item_1, trips);
+        /* use when using TripSvcSQLiteImpl */
+        Cursor cursor = null;
+        try {
+            cursor = tripSvc.getCursor();
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        if(cursor!=null) {
+            String [] columNames = {"name"};
+            int [] textFields = {android.R.layout.simple_list_item_1};
+            adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, columNames, textFields, 0);
+        }
+        /**/
+        //adapter = new ArrayAdapter<Trip>(context, android.R.layout.simple_list_item_1, trips);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

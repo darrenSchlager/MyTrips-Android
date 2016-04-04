@@ -21,7 +21,8 @@ import android.widget.Toast;
 import com.regis.darren.mytrips.domain.Location;
 import com.regis.darren.mytrips.domain.Trip;
 import com.regis.darren.mytrips.service.ITripSvc;
-import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+//import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+import com.regis.darren.mytrips.service.TripSvcSQLiteImpl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,7 +55,8 @@ public class TripActivity extends AppCompatActivity {
         setContentView(R.layout.activity_trip);
 
         try {
-            tripSvc = TripSvcSIOImpl.getInstance(this);
+            //tripSvc = TripSvcSIOImpl.getInstance(this);
+            tripSvc = TripSvcSQLiteImpl.getInstance(this);
             trips = tripSvc.retrieveAll();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -199,7 +201,8 @@ public class TripActivity extends AppCompatActivity {
             trip.setStartDate(startDate);
             trip.setEndDate(endDate);
             try {
-                tripSvc.update(trip, tripIndex);
+                //trip.setTripId(tripIndex);  //comment out when using TripSvcSQLiteImpl
+                tripSvc.update(trip);
             } catch (Exception e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -214,7 +217,8 @@ public class TripActivity extends AppCompatActivity {
         else {
             if(readyToDelete) {
                 try {
-                    tripSvc.delete(trip, tripIndex, -1, -1);
+                    //trip.setTripId(tripIndex);  //comment out when using TripSvcSQLiteImpl
+                    tripSvc.delete(trip);
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
