@@ -35,6 +35,15 @@ public class Location implements Serializable {
         tripId = -1;
     }
 
+    public Location(int locationId, String city, String stateCountry, String arrive, String depart, int tripId) {
+        this.locationId = locationId;
+        this.city = city;
+        this.stateCountry = stateCountry;
+        this.arrive = arrive;
+        this.depart = depart;
+        this.tripId = tripId;
+    }
+
     public boolean equals(Location location) {
         return city.compareTo(location.getCity())==0 && stateCountry.compareTo(location.getStateCountry())==0 && arrive.compareTo(location.getArrive())==0 && depart.compareTo(location.getDepart())==0;
     }

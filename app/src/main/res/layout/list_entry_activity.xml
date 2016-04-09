@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/relativeLayout1"
+    android:layout_marginTop="0dp"
+    android:layout_marginBottom="20dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/activity_title"
+        android:textSize="20dp"
+        android:textColor="#212121"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12-24-2016"
+        android:id="@+id/left_date"
+        android:layout_below="@+id/activity_title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="  at  "
+        android:id="@+id/textView7"
+        android:layout_below="@+id/activity_title"
+        android:layout_toRightOf="@+id/left_date"
+        android:layout_toEndOf="@+id/left_date" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10:00 AM"
+        android:id="@+id/right_time"
+        android:layout_alignTop="@+id/textView7"
+        android:layout_toRightOf="@+id/textView7"
+        android:layout_toEndOf="@+id/textView7" />
+
+</RelativeLayout>

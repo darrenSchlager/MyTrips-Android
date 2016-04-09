@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -80,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if(cursor!=null) {
             String [] columNames = {"name", "start_date", "end_date"};
-            int [] textFields = {R.id.name, R.id.left_date, R.id.right_date};
-            adapter = new SimpleCursorAdapter(this, R.layout.list_entry, cursor, columNames, textFields, 0);
+            int [] textFields = {R.id.activity_title, R.id.left_date, R.id.right_date};
+            adapter = new SimpleCursorAdapter(this, R.layout.list_entry_trip, cursor, columNames, textFields, 0);
         }
         /**/
         //adapter = new ArrayAdapter<Trip>(context, android.R.layout.simple_list_item_1, trips);

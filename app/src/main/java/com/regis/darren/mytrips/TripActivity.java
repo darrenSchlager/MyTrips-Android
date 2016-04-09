@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +12,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.regis.darren.mytrips.domain.Location;
@@ -23,6 +25,7 @@ import com.regis.darren.mytrips.domain.Trip;
 import com.regis.darren.mytrips.service.ITripSvc;
 //import com.regis.darren.mytrips.service.TripSvcSIOImpl;
 import com.regis.darren.mytrips.service.TripSvcSQLiteImpl;
+import com.regis.darren.mytrips.service.LocationSvcSQLiteImpl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,13 +34,16 @@ import java.util.List;
 public class TripActivity extends AppCompatActivity {
 
     private ITripSvc tripSvc;
+    private LocationSvcSQLiteImpl locationSvc;
 
     private int tripIndex;
     private List<Trip> trips = new ArrayList<Trip>();
+    private List<Location> locations = new ArrayList<Location>();
     private static Trip trip;
     private Context context = null;
     private ListView listView = null;
-    private ArrayAdapter adapter = null;
+    //private ArrayAdapter adapter = null;
+    private CursorAdapter adapter = null;
 
     private Boolean addingNew = false;
     private boolean readyToDelete = false;
@@ -56,6 +62,7 @@ public class TripActivity extends AppCompatActivity {
 
         try {
             //tripSvc = TripSvcSIOImpl.getInstance(this);
+            locationSvc = LocationSvcSQLiteImpl.getInstance(this);
             tripSvc = TripSvcSQLiteImpl.getInstance(this);
             trips = tripSvc.retrieveAll();
         } catch (Exception e) {
@@ -94,7 +101,23 @@ public class TripActivity extends AppCompatActivity {
         if(!addingNew) {
             dynamicButton2.setText("Delete");
         }
-        adapter.notifyDataSetChanged();
+        if(adapter!=null) {
+            /* use when using LocationSvcSQLiteImpl */
+            Cursor cursor = null;
+            try {
+                cursor = locationSvc.getCursor(trip.getTripId());
+            } catch (Exception e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            if (cursor != null) {
+                adapter.changeCursor(cursor);
+            }
+            /**/
+            adapter.notifyDataSetChanged();
+        }
+        else {
+            initWithLocations();
+        }
     }
 
     @Override
@@ -130,7 +153,20 @@ public class TripActivity extends AppCompatActivity {
         context = this;
         listView = (ListView) findViewById(R.id.locationListView);
 
-        adapter = new ArrayAdapter<Location>(context, android.R.layout.simple_list_item_1, trip.getLocations());
+        /* use when using LocationSvcSQLiteImpl */
+        Cursor cursor = null;
+        try {
+            cursor = locationSvc.getCursor(trip.getTripId());
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        if(cursor!=null) {
+            String [] columNames = {"city", "state_country", "arrive", "depart"};
+            int [] textFields = {R.id.activity_title, R.id.statecountry_title, R.id.left_date, R.id.right_date};
+            adapter = new SimpleCursorAdapter(this, R.layout.list_entry_location, cursor, columNames, textFields, 0);
+        }
+        /**/
+        //adapter = new ArrayAdapter<Location>(context, android.R.layout.simple_list_item_1, trip.getLocations());
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,13 +17,19 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.regis.darren.mytrips.domain.ActivityItem;
 import com.regis.darren.mytrips.domain.Location;
 import com.regis.darren.mytrips.domain.Trip;
+import com.regis.darren.mytrips.service.ActivitySvcSQLiteImpl;
+import com.regis.darren.mytrips.service.IActivityItemSvc;
+import com.regis.darren.mytrips.service.ILocationSvc;
 import com.regis.darren.mytrips.service.ITripSvc;
-import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+//import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+import com.regis.darren.mytrips.service.TripSvcSQLiteImpl;
+import com.regis.darren.mytrips.service.LocationSvcSQLiteImpl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +38,8 @@ import java.util.List;
 public class LocationActivity extends AppCompatActivity {
 
     private ITripSvc tripSvc;
+    private ILocationSvc locationSvc;
+    private IActivityItemSvc activityItemSvc;
 
     private int tripIndex;
     private int locationIndex;
@@ -41,7 +50,8 @@ public class LocationActivity extends AppCompatActivity {
     private static String tripEndDate;
     private Context context = null;
     private ListView listView = null;
-    private ArrayAdapter adapter = null;
+    //private ArrayAdapter adapter = null;
+    private SimpleCursorAdapter adapter = null;
 
     private Boolean addingNew = false;
     private boolean readyToDelete = false;
@@ -61,7 +71,10 @@ public class LocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_location);
 
         try {
-            tripSvc = TripSvcSIOImpl.getInstance(this);
+            //tripSvc = TripSvcSIOImpl.getInstance(this);
+            activityItemSvc = ActivitySvcSQLiteImpl.getInstance(this);
+            locationSvc = LocationSvcSQLiteImpl.getInstance(this);
+            tripSvc = TripSvcSQLiteImpl.getInstance(this);
             trips = tripSvc.retrieveAll();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -107,7 +120,23 @@ public class LocationActivity extends AppCompatActivity {
         if(!addingNew) {
             dynamicButton2.setText("Delete");
         }
-        adapter.notifyDataSetChanged();
+        if(adapter!=null) {
+            /* use when using LocationSvcSQLiteImpl */
+            Cursor cursor = null;
+            try {
+                cursor = activityItemSvc.getCursor(location.getLocationId());
+            } catch (Exception e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            if (cursor != null) {
+                adapter.changeCursor(cursor);
+            }
+            /**/
+            adapter.notifyDataSetChanged();
+        }
+        else {
+            initWithActivityItems();
+        }
     }
 
     @Override
@@ -143,7 +172,20 @@ public class LocationActivity extends AppCompatActivity {
         context = this;
         listView = (ListView) findViewById(R.id.activitiesListView);
 
-        adapter = new ArrayAdapter<ActivityItem>(context, android.R.layout.simple_list_item_1, location.getActivityItems());
+        /* use when using ActivityItemSvcSQLiteImpl */
+        Cursor cursor = null;
+        try {
+            cursor = activityItemSvc.getCursor(location.getLocationId());
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        if(cursor!=null) {
+            String [] columNames = {"activity_name", "activity_date", "activity_time"};
+            int [] textFields = {R.id.activity_title, R.id.left_date, R.id.right_time};
+            adapter = new SimpleCursorAdapter(this, R.layout.list_entry_activity, cursor, columNames, textFields, 0);
+        }
+        /**/
+        //adapter = new ArrayAdapter<ActivityItem>(context, android.R.layout.simple_list_item_1, location.getActivityItems());
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -206,8 +248,10 @@ public class LocationActivity extends AppCompatActivity {
                 location.setDepart(depart);
                 trip.getLocations().add(location);
                 try {
-                    trip.setTripId(tripIndex);
-                    tripSvc.update(trip);
+                    //trip.setTripId(tripIndex);
+                    //tripSvc.update(trip);
+                    location.setTripId(trip.getTripId());
+                    locationSvc.create(location);
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -220,8 +264,9 @@ public class LocationActivity extends AppCompatActivity {
             location.setArrive(arrive);
             location.setDepart(depart);
             try {
-                trip.setTripId(tripIndex);
-                tripSvc.update(trip);
+                //trip.setTripId(tripIndex);
+                //tripSvc.update(trip);
+                locationSvc.update(location);
             } catch (Exception e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -235,10 +280,11 @@ public class LocationActivity extends AppCompatActivity {
         }
         else {
             if(readyToDelete) {
-                trip.getLocations().remove(locationIndex);
+                //trip.getLocations().remove(locationIndex);
                 try {
-                    trip.setTripId(tripIndex);
-                    tripSvc.update(trip);
+                    //trip.setTripId(tripIndex);
+                    //tripSvc.update(trip);
+                    locationSvc.delete(location);
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }

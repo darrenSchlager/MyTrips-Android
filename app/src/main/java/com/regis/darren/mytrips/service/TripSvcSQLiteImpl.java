@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.regis.darren.mytrips.domain.Location;
 import com.regis.darren.mytrips.domain.Trip;
 
 import java.util.ArrayList;
@@ -16,9 +17,11 @@ import java.util.List;
 public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
 
     private static TripSvcSQLiteImpl instance = null;
+    private Context context;
 
     private TripSvcSQLiteImpl(Context context) {
         super(context);
+        this.context = context;
     }
 
     public static TripSvcSQLiteImpl getInstance(Context context) {
@@ -63,6 +66,8 @@ public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
         cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
             Trip trip = getTrip(cursor);
+            List<Location> locations = LocationSvcSQLiteImpl.getInstance(context).retrieveAll(trip.getTripId());
+            trip.setLocations(locations);
             trips.add(trip);
             cursor.moveToNext();
         }

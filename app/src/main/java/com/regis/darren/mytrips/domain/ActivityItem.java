@@ -32,6 +32,15 @@ public class ActivityItem implements Serializable {
         locationId = -1;
     }
 
+    public ActivityItem(int activityItemId, String activityName, String date, String time, String description, int locationId) {
+        this.activityItemId = activityItemId;
+        this.activityName = activityName;
+        this.date = date;
+        this.time = time;
+        this.description = description;
+        this.locationId = locationId;
+    }
+
     public boolean equals(ActivityItem activityItem) {
         return activityName.compareTo(activityItem.getActivityName())==0 && date.compareTo(activityItem.getDate())==0 && time.compareTo(activityItem.getTime())==0 && description.compareTo(activityItem.getDescription())==0;
     }

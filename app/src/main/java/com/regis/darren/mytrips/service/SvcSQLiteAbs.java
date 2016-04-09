@@ -20,7 +20,7 @@ public abstract class SvcSQLiteAbs extends SQLiteOpenHelper {
     private final static String DROP_TRIP_TABLE = "DROP TABLE IF EXISTS trip";
     private final static String CREATE_LOCATION_TABLE = "CREATE TABLE location (_id integer primary key autoincrement, city text, state_country text, arrive date, depart date, trip_id integer, FOREIGN KEY(trip_id) REFERENCES trip(_id))";
     private final static String DROP_LOCATION_TABLE = "DROP TABLE IF EXISTS location";
-    private final static String CREATE_ACTIVITY_ITEM_TABLE = "CREATE TABLE activity_item (_id integer primary key autoincrement, activity_name text, activity_date date, activity_time time, description text, location_id integer, FOREIGN KEY(location_id) REFERENCES location(_id))";
+    private final static String CREATE_ACTIVITY_ITEM_TABLE = "CREATE TABLE activity_item (_id integer primary key autoincrement, activity_name text, activity_date date, activity_time text, activity_time24 integer, description text, location_id integer, FOREIGN KEY(location_id) REFERENCES location(_id))";
     private final static String DROP_ACTIVITY_ITEM_TABLE = "DROP TABLE IF EXISTS activity_item";
     //protected SQLiteDatabase db = null;
     private List<Trip> currentTrips = new ArrayList();

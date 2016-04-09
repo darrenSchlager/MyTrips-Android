@@ -20,8 +20,11 @@ import android.widget.Toast;
 import com.regis.darren.mytrips.domain.ActivityItem;
 import com.regis.darren.mytrips.domain.Location;
 import com.regis.darren.mytrips.domain.Trip;
+import com.regis.darren.mytrips.service.ActivitySvcSQLiteImpl;
+import com.regis.darren.mytrips.service.IActivityItemSvc;
 import com.regis.darren.mytrips.service.ITripSvc;
-import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+//import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+import com.regis.darren.mytrips.service.TripSvcSQLiteImpl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,6 +33,7 @@ import java.util.List;
 public class ActivityItemActivity extends AppCompatActivity {
 
     private ITripSvc tripSvc;
+    private IActivityItemSvc activityItemSvc;
 
     private int tripIndex;
     private int locationIndex;
@@ -56,7 +60,9 @@ public class ActivityItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_activity_item);
 
         try {
-            tripSvc = TripSvcSIOImpl.getInstance(this);
+            //tripSvc = TripSvcSIOImpl.getInstance(this);
+            tripSvc = TripSvcSQLiteImpl.getInstance(this);
+            activityItemSvc = ActivitySvcSQLiteImpl.getInstance(this);
             trips = tripSvc.retrieveAll();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -152,8 +158,10 @@ public class ActivityItemActivity extends AppCompatActivity {
                 activityItem.setDescription(description);
                 location.getActivityItems().add(activityItem);
                 try {
-                    trip.setTripId(tripIndex);
-                    tripSvc.update(trip);
+                    //trip.setTripId(tripIndex);
+                    //tripSvc.update(trip);
+                    activityItem.setLocationId(location.getLocationId());
+                    activityItemSvc.create(activityItem);
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -166,8 +174,9 @@ public class ActivityItemActivity extends AppCompatActivity {
             activityItem.setTime(time);
             activityItem.setDescription(description);
             try {
-                trip.setTripId(tripIndex);
-                tripSvc.update(trip);
+                //trip.setTripId(tripIndex);
+                //tripSvc.update(trip);
+                activityItemSvc.update(activityItem);
             } catch (Exception e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -181,10 +190,11 @@ public class ActivityItemActivity extends AppCompatActivity {
         }
         else {
             if(readyToDelete) {
-                location.getActivityItems().remove(activityItem);
+                //location.getActivityItems().remove(activityItem);
                 try {
-                    trip.setTripId(tripIndex);
-                    tripSvc.update(trip);
+                    //trip.setTripId(tripIndex);
+                    //tripSvc.update(trip);
+                    activityItemSvc.delete(activityItem);
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
