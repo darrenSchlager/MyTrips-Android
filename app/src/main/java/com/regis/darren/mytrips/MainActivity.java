@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         if(cursor!=null) {
-            String [] columNames = {"name", "start_date", "end_date"};
+            String [] columNames = {"name", "start_date_str", "end_date_str"};
             int [] textFields = {R.id.activity_title, R.id.left_date, R.id.right_date};
             adapter = new SimpleCursorAdapter(this, R.layout.list_entry_trip, cursor, columNames, textFields, 0);
         }

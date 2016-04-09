@@ -88,7 +88,7 @@ public class ActivitySvcSQLiteImpl extends SvcSQLiteAbs implements IActivityItem
     @Override
     public Cursor getCursor(int locationId) throws Exception {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT _id, activity_name, strftime('%m-%d-%Y', activity_date) AS activity_date, activity_time, description, location_id FROM activity_item WHERE location_id="+locationId+" ORDER BY activity_date, activity_time24", null);
+        Cursor cursor = db.rawQuery("SELECT _id, activity_name, strftime('%m-%d-%Y', activity_date) AS activity_date_str, activity_time, description, location_id FROM activity_item WHERE location_id="+locationId+" ORDER BY activity_date, activity_time24", null);
         cursor.moveToFirst();
         db.close();
         return cursor;
@@ -146,6 +146,31 @@ public class ActivitySvcSQLiteImpl extends SvcSQLiteAbs implements IActivityItem
         db.delete("activity_item", "_id="+activityItem.getActivityItemId(), null);
         db.close();
         return activityItem;
+    }
+
+    @Override
+    public void updateDates(int locationId, String arrive, String depart) throws Exception {
+        SQLiteDatabase db = getWritableDatabase();
+        String[] match;
+        String arriveDate, departDate;
+        match = arrive.split("-");
+        if(match[0].length()==1) match[0] = "0"+match[0];
+        if(match[1].length()==1) match[1] = "0"+match[1];
+        arriveDate = match[2]+"-"+match[0]+"-"+match[1];
+        match = depart.split("-");
+        if(match[0].length()==1) match[0] = "0"+match[0];
+        if(match[1].length()==1) match[1] = "0"+match[1];
+        departDate = match[2]+"-"+match[0]+"-"+match[1];
+
+        ContentValues values = new ContentValues();
+        values.put("activity_date", arriveDate);
+        db.update("activity_item", values, "location_id=? AND activity_date<?", new String[]{locationId + "", arriveDate});
+
+        values = new ContentValues();
+        values.put("activity_date", departDate);
+        db.update("activity_item", values, "location_id=? AND activity_date>?", new String[]{locationId + "", departDate});
+
+        db.close();
     }
 
 }

@@ -15,4 +15,5 @@ public interface IActivityItemSvc {
     public Cursor getCursor(int locationId) throws Exception;
     public ActivityItem update(ActivityItem activityItem) throws Exception;
     public ActivityItem delete(ActivityItem activityItem) throws Exception;
+    public void updateDates(int locationId, String arrive, String depart) throws Exception;
 }

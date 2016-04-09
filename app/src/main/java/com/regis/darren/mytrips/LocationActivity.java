@@ -181,7 +181,7 @@ public class LocationActivity extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         if(cursor!=null) {
-            String [] columNames = {"activity_name", "activity_date", "activity_time"};
+            String [] columNames = {"activity_name", "activity_date_str", "activity_time"};
             int [] textFields = {R.id.activity_title, R.id.left_date, R.id.right_time};
             adapter = new SimpleCursorAdapter(this, R.layout.list_entry_activity, cursor, columNames, textFields, 0);
         }
@@ -379,7 +379,12 @@ public class LocationActivity extends AppCompatActivity {
 
         @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            String date = (month + 1) + "-" + day + "-" + year;
+            //String date = (month+1)+"-"+day+"-"+year;
+            String date;
+            if(month+1<10) date = "0"+(month+1)+"-";
+            else date = (month+1)+"-";
+            if(day<10) date+="0"+day+"-"+year;
+            else date+=day+"-"+year;
             if (settingArrive) {
                 arriveButton.setText(date);
             } else {

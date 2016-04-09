@@ -17,4 +17,5 @@ public interface ILocationSvc {
     public Cursor getCursor(int tripId) throws Exception;
     public Location update(Location location) throws Exception;
     public Location delete(Location location) throws Exception;
+    public void updateDates(int tripId, String startDate, String endDate) throws Exception;
 }

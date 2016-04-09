@@ -79,7 +79,7 @@ public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
     @Override
     public Cursor getCursor() throws Exception {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT _id, name, strftime('%m-%d-%Y', start_date) AS start_date, strftime('%m-%d-%Y', end_date) AS end_date FROM trip ORDER BY start_date", null);
+        Cursor cursor = db.rawQuery("SELECT _id, name, strftime('%m-%d-%Y', start_date) AS start_date_str, strftime('%m-%d-%Y', end_date) AS end_date_str FROM trip ORDER BY start_date", null);
         cursor.moveToFirst();
         db.close();
         return cursor;
@@ -110,6 +110,12 @@ public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
         if(match[0].length()==1) match[0] = "0"+match[0];
         if(match[1].length()==1) match[1] = "0"+match[1];
         endDate = match[2]+"-"+match[0]+"-"+match[1];
+
+        LocationSvcSQLiteImpl.getInstance(context).updateDates(trip.getTripId(), trip.getStartDate(), trip.getEndDate());
+        List<Location> locations = LocationSvcSQLiteImpl.getInstance(context).retrieveAll(trip.getTripId());
+        for (Location l: locations) {
+            ActivitySvcSQLiteImpl.getInstance(context).updateDates(l.getLocationId(), l.getArrive(), l.getDepart());
+        }
 
         ContentValues values = new ContentValues();
         values.put("name", trip.getName());

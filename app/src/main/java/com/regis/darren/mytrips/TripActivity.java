@@ -162,7 +162,7 @@ public class TripActivity extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         if(cursor!=null) {
-            String [] columNames = {"city", "state_country", "arrive", "depart"};
+            String [] columNames = {"city", "state_country", "arrive_str", "depart_str"};
             int [] textFields = {R.id.activity_title, R.id.statecountry_title, R.id.left_date, R.id.right_date};
             adapter = new SimpleCursorAdapter(this, R.layout.list_entry_location, cursor, columNames, textFields, 0);
         }
@@ -334,7 +334,13 @@ public class TripActivity extends AppCompatActivity {
 
         @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            String date = (month+1)+"-"+day+"-"+year;
+            //String date = (month+1)+"-"+day+"-"+year;
+            String date;
+            if(month+1<10) date = "0"+(month+1)+"-";
+            else date = (month+1)+"-";
+            if(day<10) date+="0"+day+"-"+year;
+            else date+=day+"-"+year;
+
             if(settingStartDate) {
                 startDateButton.setText(date);
             }

@@ -81,7 +81,7 @@ public class LocationSvcSQLiteImpl extends SvcSQLiteAbs implements ILocationSvc 
     @Override
     public Cursor getCursor(int tripId) throws Exception {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT _id, city, state_country, strftime('%m-%d-%Y', arrive) AS arrive, strftime('%m-%d-%Y', depart) AS depart, trip_id FROM location WHERE trip_id="+tripId+" ORDER BY arrive", null);
+        Cursor cursor = db.rawQuery("SELECT _id, city, state_country, strftime('%m-%d-%Y', arrive) AS arrive_str, strftime('%m-%d-%Y', depart) AS depart_str, trip_id FROM location WHERE trip_id="+tripId+" ORDER BY arrive", null);
         cursor.moveToFirst();
         db.close();
         return cursor;
@@ -113,6 +113,8 @@ public class LocationSvcSQLiteImpl extends SvcSQLiteAbs implements ILocationSvc 
         if(match[1].length()==1) match[1] = "0"+match[1];
         depart = match[2]+"-"+match[0]+"-"+match[1];
 
+        ActivitySvcSQLiteImpl.getInstance(context).updateDates(location.getLocationId(), location.getArrive(), location.getDepart());
+
         ContentValues values = new ContentValues();
         values.put("city", location.getCity());
         values.put("state_country", location.getStateCountry());
@@ -130,6 +132,31 @@ public class LocationSvcSQLiteImpl extends SvcSQLiteAbs implements ILocationSvc 
         db.delete("location", "_id="+location.getLocationId(), null);
         db.close();
         return location;
+    }
+
+    @Override
+    public void updateDates(int tripId, String startDate, String endDate) throws Exception {
+        SQLiteDatabase db = getWritableDatabase();
+        String[] match;
+        String arrive, depart;
+        match = startDate.split("-");
+        if(match[0].length()==1) match[0] = "0"+match[0];
+        if(match[1].length()==1) match[1] = "0"+match[1];
+        arrive = match[2]+"-"+match[0]+"-"+match[1];
+        match = endDate.split("-");
+        if(match[0].length()==1) match[0] = "0"+match[0];
+        if(match[1].length()==1) match[1] = "0"+match[1];
+        depart = match[2]+"-"+match[0]+"-"+match[1];
+
+        ContentValues values = new ContentValues();
+        values.put("arrive", arrive);
+        db.update("location", values, "trip_id=? AND (arrive<? OR arrive>?)", new String[]{tripId + "", arrive, depart});
+
+        values = new ContentValues();
+        values.put("depart", depart);
+        db.update("location", values, "trip_id=? AND (depart<? OR depart>?)", new String[]{tripId+"", arrive, depart});
+
+        db.close();
     }
 
 }

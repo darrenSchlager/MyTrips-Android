@@ -262,7 +262,12 @@ public class ActivityItemActivity extends AppCompatActivity {
 
         @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            String date = (month + 1) + "-" + day + "-" + year;
+            //String date = (month+1)+"-"+day+"-"+year;
+            String date;
+            if(month+1<10) date = "0"+(month+1)+"-";
+            else date = (month+1)+"-";
+            if(day<10) date+="0"+day+"-"+year;
+            else date+=day+"-"+year;
             dateButton.setText(date);
         }
     }
