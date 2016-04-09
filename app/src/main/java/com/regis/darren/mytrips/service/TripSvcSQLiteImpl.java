@@ -34,8 +34,12 @@ public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
         String[] match;
         String startDate, endDate;
         match = trip.getStartDate().split("-");
+        if(match[0].length()==1) match[0] = "0"+match[0];
+        if(match[1].length()==1) match[1] = "0"+match[1];
         startDate = match[2]+"-"+match[0]+"-"+match[1];
         match = trip.getEndDate().split("-");
+        if(match[0].length()==1) match[0] = "0"+match[0];
+        if(match[1].length()==1) match[1] = "0"+match[1];
         endDate = match[2]+"-"+match[0]+"-"+match[1];
 
         ContentValues values = new ContentValues();
@@ -43,7 +47,7 @@ public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
         values.put("start_date", startDate);
         values.put("end_date", endDate);
         db.insert("trip", null, values);
-        Cursor cursor = db.rawQuery("last_insert_rowid()", null);
+        Cursor cursor = db.rawQuery("SELECT last_insert_rowid()", null);
         cursor.moveToFirst();
         trip.setTripId(cursor.getInt(0));
         cursor.close();
@@ -55,7 +59,7 @@ public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
     public List<Trip> retrieveAll() throws Exception {
         SQLiteDatabase db = getReadableDatabase();
         List<Trip> trips = new ArrayList();
-        Cursor cursor = db.query("trip", new String[]{"trip_id", "name", "start_date", "end_date"}, null, null, null, null, null);
+        Cursor cursor = db.query("trip", new String[]{"_id", "name", "start_date", "end_date"}, null, null, null, null, "start_date");
         cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
             Trip trip = getTrip(cursor);
@@ -70,7 +74,7 @@ public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
     @Override
     public Cursor getCursor() throws Exception {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM trip", null);
+        Cursor cursor = db.rawQuery("SELECT _id, name, strftime('%m-%d-%Y', start_date) AS start_date, strftime('%m-%d-%Y', end_date) AS end_date FROM trip ORDER BY start_date", null);
         cursor.moveToFirst();
         db.close();
         return cursor;
@@ -94,15 +98,19 @@ public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
         String[] match;
         String startDate, endDate;
         match = trip.getStartDate().split("-");
+        if(match[0].length()==1) match[0] = "0"+match[0];
+        if(match[1].length()==1) match[1] = "0"+match[1];
         startDate = match[2]+"-"+match[0]+"-"+match[1];
         match = trip.getEndDate().split("-");
+        if(match[0].length()==1) match[0] = "0"+match[0];
+        if(match[1].length()==1) match[1] = "0"+match[1];
         endDate = match[2]+"-"+match[0]+"-"+match[1];
 
         ContentValues values = new ContentValues();
         values.put("name", trip.getName());
         values.put("start_date", startDate);
         values.put("end_date", endDate);
-        db.update("trip", values, "trip_id=" + String.valueOf(trip.getTripId()), null);
+        db.update("trip", values, "_id=" + String.valueOf(trip.getTripId()), null);
         db.close();
         return trip;
     }
@@ -110,7 +118,7 @@ public class TripSvcSQLiteImpl extends SvcSQLiteAbs implements ITripSvc {
     @Override
     public Trip delete(Trip trip) throws Exception {
         SQLiteDatabase db = getWritableDatabase();
-        db.delete("trip", "trip_id="+trip.getTripId(), null);
+        db.delete("trip", "_id="+trip.getTripId(), null);
         db.close();
         return trip;
     }

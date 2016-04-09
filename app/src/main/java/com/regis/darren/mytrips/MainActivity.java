@@ -51,6 +51,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        /* use when using TripSvcSQLiteImpl */
+        Cursor cursor = null;
+        try {
+            cursor = tripSvc.getCursor();
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        if(cursor!=null) {
+            adapter.changeCursor(cursor);
+        }
+        /**/
+
         adapter.notifyDataSetChanged();
     }
 
@@ -66,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         if(cursor!=null) {
-            String [] columNames = {"name"};
-            int [] textFields = {android.R.layout.simple_list_item_1};
-            adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, columNames, textFields, 0);
+            String [] columNames = {"name", "start_date", "end_date"};
+            int [] textFields = {R.id.name, R.id.left_date, R.id.right_date};
+            adapter = new SimpleCursorAdapter(this, R.layout.list_entry, cursor, columNames, textFields, 0);
         }
         /**/
         //adapter = new ArrayAdapter<Trip>(context, android.R.layout.simple_list_item_1, trips);
