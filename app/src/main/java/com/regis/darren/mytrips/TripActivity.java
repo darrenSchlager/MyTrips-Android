@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -263,6 +264,17 @@ public class TripActivity extends AppCompatActivity {
             else {
                 dynamicButton2.setText("Confirm Delete");
                 readyToDelete = true;
+
+                CountDownTimer Count = new CountDownTimer(1500, 500) {
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    public void onFinish() {
+                        readyToDelete=false;
+                        dynamicButton2.setText("Delete");
+                    }
+                };
+                Count.start();
             }
         }
     }
