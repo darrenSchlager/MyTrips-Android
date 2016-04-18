@@ -10,16 +10,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.regis.darren.mytrips.domain.Trip;
-import com.regis.darren.mytrips.service.ITripSvc;
-//import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+import com.regis.darren.mytrips.service.TripSvcSIOImpl;
 import com.regis.darren.mytrips.service.TripSvcSQLiteImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItineraryActivity extends AppCompatActivity {
-
-    private ITripSvc tripSvc;
 
     private int tripIndex;
     private List<Trip> trips = new ArrayList<Trip>();
@@ -28,15 +25,16 @@ public class ItineraryActivity extends AppCompatActivity {
     private ExpandableListView expandableListView = null;
     private ExpandableListAdapter adapter = null;
 
+    private boolean usingSQLite = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_itinerary);
 
         try {
-            //tripSvc = TripSvcSIOImpl.getInstance(this);
-            tripSvc = TripSvcSQLiteImpl.getInstance(this);
-            trips = tripSvc.retrieveAll();
+            if(usingSQLite) trips = TripSvcSQLiteImpl.getInstance(this).retrieveAll();
+            else trips = TripSvcSIOImpl.getInstance(this).retrieveAll();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }

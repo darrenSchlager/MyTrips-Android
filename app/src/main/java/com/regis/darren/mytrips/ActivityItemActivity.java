@@ -24,7 +24,7 @@ import com.regis.darren.mytrips.domain.Trip;
 import com.regis.darren.mytrips.service.ActivitySvcSQLiteImpl;
 import com.regis.darren.mytrips.service.IActivityItemSvc;
 import com.regis.darren.mytrips.service.ITripSvc;
-//import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+import com.regis.darren.mytrips.service.TripSvcSIOImpl;
 import com.regis.darren.mytrips.service.TripSvcSQLiteImpl;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.List;
 
 public class ActivityItemActivity extends AppCompatActivity {
 
-    private ITripSvc tripSvc;
+    private ITripSvc tripSIOSvc, tripSQLiteSvc;
     private IActivityItemSvc activityItemSvc;
 
     private int tripIndex;
@@ -55,16 +55,22 @@ public class ActivityItemActivity extends AppCompatActivity {
     private Boolean addingNew = false;
     private boolean readyToDelete = false;
 
+    private boolean usingSQLite = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_item);
 
         try {
-            //tripSvc = TripSvcSIOImpl.getInstance(this);
-            tripSvc = TripSvcSQLiteImpl.getInstance(this);
-            activityItemSvc = ActivitySvcSQLiteImpl.getInstance(this);
-            trips = tripSvc.retrieveAll();
+            if (usingSQLite) {
+                activityItemSvc = ActivitySvcSQLiteImpl.getInstance(this);
+                tripSQLiteSvc = TripSvcSQLiteImpl.getInstance(this);
+                trips = tripSQLiteSvc.retrieveAll();
+            } else {
+                tripSIOSvc = TripSvcSIOImpl.getInstance(this);
+                trips = tripSIOSvc.retrieveAll();
+            }
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -159,10 +165,13 @@ public class ActivityItemActivity extends AppCompatActivity {
                 activityItem.setDescription(description);
                 location.getActivityItems().add(activityItem);
                 try {
-                    //trip.setTripId(tripIndex);
-                    //tripSvc.update(trip);
-                    activityItem.setLocationId(location.getLocationId());
-                    activityItemSvc.create(activityItem);
+                    if(tripSIOSvc!=null) {
+                        trip.setTripId(tripIndex);
+                        tripSIOSvc.update(trip);
+                    } else {
+                        activityItem.setLocationId(location.getLocationId());
+                        activityItemSvc.create(activityItem);
+                    }
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -175,9 +184,12 @@ public class ActivityItemActivity extends AppCompatActivity {
             activityItem.setTime(time);
             activityItem.setDescription(description);
             try {
-                //trip.setTripId(tripIndex);
-                //tripSvc.update(trip);
-                activityItemSvc.update(activityItem);
+                if(usingSQLite) {
+                    activityItemSvc.update(activityItem);
+                } else {
+                    trip.setTripId(tripIndex);
+                    tripSIOSvc.update(trip);
+                }
             } catch (Exception e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -191,11 +203,14 @@ public class ActivityItemActivity extends AppCompatActivity {
         }
         else {
             if(readyToDelete) {
-                //location.getActivityItems().remove(activityItem);
+                if(!usingSQLite) location.getActivityItems().remove(activityItem);
                 try {
-                    //trip.setTripId(tripIndex);
-                    //tripSvc.update(trip);
-                    activityItemSvc.delete(activityItem);
+                    if(usingSQLite) {
+                        activityItemSvc.delete(activityItem);
+                    } else {
+                        trip.setTripId(tripIndex);
+                        tripSIOSvc.update(trip);
+                    }
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }

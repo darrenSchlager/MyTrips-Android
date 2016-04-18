@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.DatePicker;
@@ -23,8 +24,9 @@ import android.widget.Toast;
 
 import com.regis.darren.mytrips.domain.Location;
 import com.regis.darren.mytrips.domain.Trip;
+import com.regis.darren.mytrips.service.ILocationSvc;
 import com.regis.darren.mytrips.service.ITripSvc;
-//import com.regis.darren.mytrips.service.TripSvcSIOImpl;
+import com.regis.darren.mytrips.service.TripSvcSIOImpl;
 import com.regis.darren.mytrips.service.TripSvcSQLiteImpl;
 import com.regis.darren.mytrips.service.LocationSvcSQLiteImpl;
 
@@ -34,8 +36,8 @@ import java.util.List;
 
 public class TripActivity extends AppCompatActivity {
 
-    private ITripSvc tripSvc;
-    private LocationSvcSQLiteImpl locationSvc;
+    private ITripSvc tripSIOSvc, tripSQLiteSvc;
+    private ILocationSvc locationSvc;
 
     private int tripIndex;
     private List<Trip> trips = new ArrayList<Trip>();
@@ -43,8 +45,8 @@ public class TripActivity extends AppCompatActivity {
     private static Trip trip;
     private Context context = null;
     private ListView listView = null;
-    //private ArrayAdapter adapter = null;
-    private CursorAdapter adapter = null;
+    private ArrayAdapter arrayAdapter = null;
+    private CursorAdapter cursorAdapter = null;
 
     private Boolean addingNew = false;
     private boolean readyToDelete = false;
@@ -56,16 +58,22 @@ public class TripActivity extends AppCompatActivity {
     private Button dynamicButton1;
     private Button dynamicButton2;
 
+    private boolean usingSQLite = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip);
 
         try {
-            //tripSvc = TripSvcSIOImpl.getInstance(this);
-            locationSvc = LocationSvcSQLiteImpl.getInstance(this);
-            tripSvc = TripSvcSQLiteImpl.getInstance(this);
-            trips = tripSvc.retrieveAll();
+            if(usingSQLite) {
+                locationSvc = LocationSvcSQLiteImpl.getInstance(this);
+                tripSQLiteSvc = TripSvcSQLiteImpl.getInstance(this);
+                trips = tripSQLiteSvc.retrieveAll();
+            } else {
+                tripSIOSvc = TripSvcSIOImpl.getInstance(this);
+                trips = tripSIOSvc.retrieveAll();
+            }
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -76,6 +84,9 @@ public class TripActivity extends AppCompatActivity {
         endDateButton = (Button) findViewById(R.id.endDate);
         dynamicButton1 = (Button) findViewById(R.id.tripDynamicButton1);
         dynamicButton2 = (Button) findViewById(R.id.tripDynamicButton2);
+
+        context = this;
+        listView = (ListView) findViewById(R.id.locationListView);
 
         tripIndex = intent.getIntExtra("tripIndex", -1);
         if(tripIndex != -1) {
@@ -92,7 +103,9 @@ public class TripActivity extends AppCompatActivity {
             dynamicButton2.setText("Cancel");
             addingNew = true;
         }
-        initWithLocations();
+
+        if(usingSQLite) initSQLite();
+        else initSIO();
     }
 
     @Override
@@ -102,8 +115,8 @@ public class TripActivity extends AppCompatActivity {
         if(!addingNew) {
             dynamicButton2.setText("Delete");
         }
-        if(adapter!=null) {
-            /* use when using LocationSvcSQLiteImpl */
+
+        if(usingSQLite) {
             Cursor cursor = null;
             try {
                 cursor = locationSvc.getCursor(trip.getTripId());
@@ -111,13 +124,12 @@ public class TripActivity extends AppCompatActivity {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
             if (cursor != null) {
-                adapter.changeCursor(cursor);
+                cursorAdapter.changeCursor(cursor);
             }
-            /**/
-            adapter.notifyDataSetChanged();
-        }
-        else {
-            initWithLocations();
+
+            cursorAdapter.notifyDataSetChanged();
+        } else {
+            arrayAdapter.notifyDataSetChanged();
         }
     }
 
@@ -150,11 +162,7 @@ public class TripActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initWithLocations() {
-        context = this;
-        listView = (ListView) findViewById(R.id.locationListView);
-
-        /* use when using LocationSvcSQLiteImpl */
+    private void initSQLite() {
         Cursor cursor = null;
         try {
             cursor = locationSvc.getCursor(trip.getTripId());
@@ -162,13 +170,32 @@ public class TripActivity extends AppCompatActivity {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         if(cursor!=null) {
-            String [] columNames = {"city", "state_country", "arrive_str", "depart_str"};
-            int [] textFields = {R.id.activity_title, R.id.statecountry_title, R.id.left_date, R.id.right_date};
-            adapter = new SimpleCursorAdapter(this, R.layout.list_entry_location, cursor, columNames, textFields, 0);
+            String[] columNames = {"city", "state_country", "arrive_str", "depart_str"};
+            int[] textFields = {R.id.activity_title, R.id.statecountry_title, R.id.left_date, R.id.right_date};
+            cursorAdapter = new SimpleCursorAdapter(this, R.layout.list_entry_location, cursor, columNames, textFields, 0);
+            listView.setAdapter(cursorAdapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if(trip.equals(new Trip(tripNameField.getText().toString(), startDateButton.getText().toString(), endDateButton.getText().toString()))) {
+                        Intent intent = new Intent(context, LocationActivity.class);
+                        intent.putExtra("tripIndex", tripIndex);
+                        intent.putExtra("locationIndex", position);
+                        startActivity(intent);
+                    }
+                    else {
+                        Toast.makeText(context, "Please SAVE the trip first", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
         }
-        /**/
-        //adapter = new ArrayAdapter<Location>(context, android.R.layout.simple_list_item_1, trip.getLocations());
-        listView.setAdapter(adapter);
+    }
+
+    private void initSIO() {
+        arrayAdapter = new ArrayAdapter<Location>(context, android.R.layout.simple_list_item_1, trip.getLocations());
+        listView.setAdapter(arrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -225,7 +252,9 @@ public class TripActivity extends AppCompatActivity {
                 trip.setStartDate(startDate);
                 trip.setEndDate(endDate);
                 try {
-                    tripSvc.create(trip);
+                    if(usingSQLite) tripSQLiteSvc.create(trip);
+                    else tripSIOSvc.create(trip);
+
                 }
                 catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -238,8 +267,11 @@ public class TripActivity extends AppCompatActivity {
             trip.setStartDate(startDate);
             trip.setEndDate(endDate);
             try {
-                //trip.setTripId(tripIndex);  //comment out when using TripSvcSQLiteImpl
-                tripSvc.update(trip);
+                if(usingSQLite) tripSQLiteSvc.update(trip);
+                else {
+                    trip.setTripId(tripIndex);
+                    tripSIOSvc.update(trip);
+                }
             } catch (Exception e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -254,8 +286,11 @@ public class TripActivity extends AppCompatActivity {
         else {
             if(readyToDelete) {
                 try {
-                    //trip.setTripId(tripIndex);  //comment out when using TripSvcSQLiteImpl
-                    tripSvc.delete(trip);
+                    if(usingSQLite) tripSQLiteSvc.delete(trip);
+                    else {
+                        trip.setTripId(tripIndex);
+                        tripSIOSvc.delete(trip);
+                    }
                 } catch (Exception e) {
                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
